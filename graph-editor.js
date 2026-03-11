@@ -1,7 +1,9 @@
 (function () {
   const STORAGE_KEY = "vacation-graph-workspace-v3";
-  const API_GRAPH = "/api/graph";
-  const API_SEARCH = "/api/search";
+  const API_GRAPH = new URL("./api/graph", window.location.href).toString();
+  const API_SEARCH = new URL("./api/search", window.location.href).toString();
+  const STATIC_GRAPH = new URL("./graph-state.json", window.location.href).toString();
+  const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
   const COLORS = {
     TripWindow: { bg: "#f9e4b7", fg: "#8c5100" },
@@ -30,6 +32,10 @@
     detailDraft: null,
     detailOriginal: null,
     detailIsNew: false,
+    runtime: {
+      serverAvailable: false,
+      source: "seed",
+    },
   };
 
   const el = {
@@ -90,12 +96,28 @@
       const response = await fetch(API_GRAPH, { cache: "no-store" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const graph = await response.json();
+      state.runtime.serverAvailable = true;
+      state.runtime.source = "server";
       localStorage.setItem(STORAGE_KEY, JSON.stringify(graph));
       return graph;
     } catch {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw);
-      return structuredClone(window.GRAPH_SEED);
+      try {
+        const response = await fetch(STATIC_GRAPH, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const graph = await response.json();
+        state.runtime.serverAvailable = false;
+        state.runtime.source = "static";
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(graph));
+        return graph;
+      } catch {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          state.runtime.source = "local";
+          return JSON.parse(raw);
+        }
+        state.runtime.source = "seed";
+        return structuredClone(window.GRAPH_SEED);
+      }
     }
   }
 
@@ -219,7 +241,13 @@
 
   function renderMeta() {
     const stamp = state.graph?.meta?.updatedAt || "";
-    el.updatedStamp.textContent = `최근 저장: ${formatDate(stamp)}`;
+    const sourceLabel = {
+      server: "server",
+      static: "pages",
+      local: "local",
+      seed: "seed",
+    }[state.runtime.source] || state.runtime.source;
+    el.updatedStamp.textContent = `최근 저장: ${formatDate(stamp)} · ${sourceLabel}`;
   }
 
   function renderNodes() {
@@ -339,17 +367,24 @@
     renderChats();
 
     try {
-      const response = await fetch(API_SEARCH, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query,
-          model: el.searchModel.value.trim(),
-          apiKey: el.searchApiKey.value.trim(),
-        }),
-      });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const result = await response.json();
+      let result;
+      try {
+        const response = await fetch(API_SEARCH, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query,
+            model: el.searchModel.value.trim(),
+            apiKey: el.searchApiKey.value.trim(),
+          }),
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        result = await response.json();
+        state.runtime.serverAvailable = true;
+      } catch {
+        result = await runStaticSearch(query);
+        state.runtime.serverAvailable = false;
+      }
       placeholder.text = result.answer || "답변 없음";
       placeholder.matches = result.matches || [];
       placeholder.matchedEdges = result.matched_edges || [];
@@ -608,13 +643,21 @@
 
   async function saveServer() {
     saveLocal();
+    if (!state.runtime.serverAvailable) {
+      alert("정적 모드에서는 브라우저에만 저장된다. GitHub Pages에서는 JSON 내보내기로 백업하거나 서버 모드에서 저장해야 한다.");
+      renderMeta();
+      return;
+    }
     try {
       await fetch(API_GRAPH, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(state.graph),
       });
-    } catch {}
+    } catch {
+      state.runtime.serverAvailable = false;
+      alert("서버 저장에 실패했다. 현재 변경 내용은 브라우저에만 저장되어 있다.");
+    }
     renderMeta();
   }
 
@@ -876,5 +919,168 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  async function runStaticSearch(query) {
+    const matches = searchGraphLocal(state.graph, query);
+    const matchedEdges = relatedEdgesLocal(state.graph, matches);
+    const apiKey = el.searchApiKey.value.trim();
+    const model = el.searchModel.value.trim() || "openai/gpt-4o-mini";
+    let answer = buildLocalAnswer(matches, matchedEdges);
+    let usedOpenRouter = false;
+
+    if (apiKey) {
+      try {
+        answer = await callOpenRouterDirect(query, state.graph, matches, model, apiKey);
+        usedOpenRouter = true;
+      } catch (error) {
+        answer = `${buildLocalAnswer(matches, matchedEdges)}\n\nOpenRouter 호출 실패: ${error}`;
+      }
+    }
+
+    return {
+      matches,
+      matched_edges: matchedEdges,
+      answer,
+      used_openrouter: usedOpenRouter,
+      model,
+      graph_context: buildGraphContext(state.graph, matches),
+    };
+  }
+
+  function searchGraphLocal(graph, query) {
+    const terms = query
+      .split(/\s+/)
+      .map((term) => term.trim().toLowerCase())
+      .filter(Boolean);
+    const queryLower = query.toLowerCase();
+    if (!terms.length) return [];
+
+    const results = [];
+    graph.nodes.forEach((node) => {
+      const haystack = [
+        node.id || "",
+        node.type || "",
+        node.title || "",
+        node.notes || "",
+        JSON.stringify(node.properties || {}),
+      ]
+        .join(" ")
+        .toLowerCase();
+      const title = String(node.title || "").toLowerCase();
+      let score = terms.reduce((sum, term) => sum + countOccurrences(haystack, term), 0);
+      if (terms.some((term) => title.includes(term))) score += 3;
+      if (title && queryLower.includes(title)) score += 6;
+      if (["Scenario", "Transport", "PriceEvidence"].includes(node.type)) score += 1;
+      if (!score) return;
+      results.push({
+        kind: "node",
+        id: node.id,
+        title: node.title,
+        type: node.type,
+        notes: node.notes || "",
+        properties: node.properties || {},
+        score,
+      });
+    });
+    results.sort((a, b) => b.score - a.score);
+    return results.slice(0, 8);
+  }
+
+  function relatedEdgesLocal(graph, matches) {
+    const nodeIds = new Set(matches.map((item) => item.id));
+    return graph.edges
+      .filter((edge) => nodeIds.has(edge.from) || nodeIds.has(edge.to))
+      .slice(0, 12)
+      .map((edge) => ({
+        kind: "edge",
+        id: edge.id,
+        label: edge.label,
+        from: edge.from,
+        to: edge.to,
+      }));
+  }
+
+  function buildLocalAnswer(matches, matchedEdges) {
+    if (!matches.length && !matchedEdges.length) {
+      return "관련된 정보가 아직 매칭되지 않았다. 다른 키워드로 다시 질문해줘.";
+    }
+    const lines = [];
+    if (matches.length) {
+      lines.push("사용된 정보:");
+      matches.forEach((item) => {
+        lines.push(`- [${item.type}] ${item.title}`);
+      });
+    }
+    if (matchedEdges.length) {
+      lines.push("");
+      lines.push("연결 정보:");
+      matchedEdges.slice(0, 6).forEach((edge) => {
+        const from = getNode(edge.from)?.title || edge.from;
+        const to = getNode(edge.to)?.title || edge.to;
+        lines.push(`- ${from} -> ${edge.label} -> ${to}`);
+      });
+    }
+    lines.push("");
+    lines.push("GitHub Pages 정적 모드에서는 로컬 매칭으로 답변을 만들고, 설정에 API 키를 넣으면 OpenRouter 직접 검색도 사용할 수 있다.");
+    return lines.join("\n");
+  }
+
+  function buildGraphContext(graph, matches) {
+    const parts = [`Graph title: ${graph.meta?.title || ""}`, "Top graph matches:"];
+    matches.forEach((item) => {
+      const props = Object.entries(item.properties || {})
+        .map(([key, value]) => `${key}=${value}`)
+        .join(", ");
+      parts.push(`- [${item.type}] ${item.title} (${item.id}): ${item.notes || ""} | ${props}`);
+    });
+    return parts.join("\n");
+  }
+
+  async function callOpenRouterDirect(query, graph, matches, model, apiKey) {
+    const payload = {
+      model,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a travel graph search assistant. Use the provided graph context first, avoid inventing unavailable routes, and answer in concise Korean. Explicitly mention which matched items were used.",
+        },
+        {
+          role: "user",
+          content: `Question: ${query}\n\nGraph context:\n${buildGraphContext(graph, matches)}`,
+        },
+      ],
+      temperature: 0.2,
+      max_tokens: 500,
+    };
+    const response = await fetch(OPENROUTER_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": window.location.origin,
+        "X-Title": "Vacation Graph Workspace",
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      const detail = await response.text();
+      throw new Error(`OpenRouter HTTP ${response.status}: ${detail.slice(0, 200)}`);
+    }
+    const body = await response.json();
+    return body.choices?.[0]?.message?.content || "답변 없음";
+  }
+
+  function countOccurrences(haystack, needle) {
+    if (!needle) return 0;
+    let index = 0;
+    let count = 0;
+    while (true) {
+      index = haystack.indexOf(needle, index);
+      if (index === -1) return count;
+      count += 1;
+      index += needle.length;
+    }
   }
 })();
