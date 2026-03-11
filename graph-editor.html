@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vacation Graph Workspace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./graph-editor.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="canvas-wrap">
+        <div class="canvas-topbar">
+          <div class="topbar-leading">
+            <div class="topbar-title">
+              <strong>Japan trip graph</strong>
+              <span id="updatedStamp"></span>
+            </div>
+          </div>
+          <div class="topbar-actions">
+            <button id="settingsBtn" class="icon-fab" type="button" title="설정">⚙️</button>
+            <button id="addNodeBtn" class="icon-fab" type="button" title="노드 추가">➕</button>
+            <button id="connectBtn" class="icon-fab" type="button" title="엣지 연결">🔗</button>
+            <button id="saveBtn" class="icon-fab" type="button" title="서버 저장">💾</button>
+            <button id="fitBtn" class="icon-fab" type="button" title="화면 맞춤">🎯</button>
+          </div>
+        </div>
+
+        <div id="viewport" class="viewport">
+          <div id="world" class="world">
+            <svg id="edgeLayer" class="graph-svg"></svg>
+            <div id="nodeLayer" class="node-layer"></div>
+          </div>
+        </div>
+
+        <div class="canvas-hint">
+          배경 드래그: 이동 · 휠: 줌 · 노드/엣지 탭: 상세 · 답변 클릭: 사용된 정보 모달
+        </div>
+
+        <section class="chat-shell">
+          <div class="chat-panel-head">
+            <div class="chat-size-controls">
+              <button id="chatGrowBtn" class="icon-fab icon-fab-sm chat-size-btn" type="button" title="대화창 키우기">˄</button>
+              <button id="chatShrinkBtn" class="icon-fab icon-fab-sm chat-size-btn" type="button" title="대화창 줄이기">˅</button>
+            </div>
+          </div>
+          <div id="chatMessages" class="chat-messages"></div>
+          <form id="chatForm" class="chat-inputbar">
+            <textarea
+              id="searchQuery"
+              placeholder="예: 후쿠오카와 대마도 중 집 도착까지 총비용과 도착 시간을 비교해줘"
+            ></textarea>
+            <button id="searchBtn" class="chat-send" type="submit">질문</button>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <input id="importInput" type="file" accept="application/json" hidden />
+
+    <dialog id="settingsModal" class="app-modal">
+      <form method="dialog" class="modal-card">
+        <div class="modal-head">
+          <h2>설정</h2>
+          <button class="close-btn" type="submit">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="field">
+            <label for="searchModel">OpenRouter 모델</label>
+            <input id="searchModel" type="text" value="openai/gpt-4o-mini" />
+          </div>
+          <div class="field">
+            <label for="searchApiKey">OpenRouter API Key</label>
+            <input id="searchApiKey" type="password" placeholder="비워두면 서버 환경변수 사용" />
+          </div>
+          <div class="field">
+            <label>데이터</label>
+            <div class="settings-actions">
+              <button id="exportBtn" class="btn" type="button">내보내기</button>
+              <button id="importBtn" class="btn" type="button">가져오기</button>
+              <button id="resetBtn" class="btn warn" type="button">초기화</button>
+              <button id="deleteBtn" class="btn warn" type="button">선택 삭제</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>타입 팔레트</label>
+            <div class="type-palette">
+              <span class="palette-chip palette-trip">TripWindow</span>
+              <span class="palette-chip palette-constraint">Constraint</span>
+              <span class="palette-chip palette-scenario">Scenario</span>
+              <span class="palette-chip palette-transport">Transport</span>
+              <span class="palette-chip palette-lodging">Lodging</span>
+              <span class="palette-chip palette-evidence">PriceEvidence</span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="detailModal" class="app-modal">
+      <form method="dialog" class="modal-card modal-wide">
+        <div class="modal-head">
+          <h2 id="detailTitle">상세 정보</h2>
+          <button class="close-btn" type="submit">✕</button>
+        </div>
+        <div class="modal-body">
+          <p id="detailMeta" class="detail-meta"></p>
+          <div id="detailSummary" class="summary-grid"></div>
+          <div class="field">
+            <label for="fieldTitle">제목</label>
+            <input id="fieldTitle" type="text" />
+          </div>
+          <div class="field">
+            <label for="fieldType">타입</label>
+            <select id="fieldType">
+              <option value="TripWindow">TripWindow</option>
+              <option value="Constraint">Constraint</option>
+              <option value="Scenario">Scenario</option>
+              <option value="Transport">Transport</option>
+              <option value="Lodging">Lodging</option>
+              <option value="PriceEvidence">PriceEvidence</option>
+              <option value="Default">Default</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fieldNotes">메모</label>
+            <textarea id="fieldNotes"></textarea>
+          </div>
+          <div id="nodeFields">
+            <div class="field">
+              <label>속성</label>
+              <div id="propertyTable" class="property-table"></div>
+              <button id="addPropertyBtn" class="btn subtle" type="button">속성 추가</button>
+            </div>
+          </div>
+          <div id="edgeFields" hidden>
+            <div class="field">
+              <label for="fieldEdgeLabel">엣지 라벨</label>
+              <input id="fieldEdgeLabel" type="text" />
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button id="cancelDetailBtn" class="btn" type="button">취소</button>
+            <button id="saveDetailBtn" class="btn subtle" type="button">저장</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="answerModal" class="app-modal">
+      <form method="dialog" class="modal-card modal-wide">
+        <div class="modal-head">
+          <h2>사용된 정보</h2>
+          <button class="close-btn" type="submit">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="detail-meta">답변 생성에 사용된 매칭 노드와 연결 엣지</p>
+          <div id="ontologyUsedModal" class="ontology-modal-list"></div>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="./graph-data.js"></script>
+    <script src="./graph-editor.js"></script>
+  </body>
+</html>

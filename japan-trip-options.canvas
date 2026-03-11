@@ -1,0 +1,212 @@
+{
+  "nodes": [
+    {
+      "id": "window",
+      "type": "text",
+      "x": -1260,
+      "y": -260,
+      "width": 360,
+      "height": 220,
+      "color": "2",
+      "text": "Trip Window\n2026-03-22 19:00 이후 출발\n2026-03-24 내 복귀\n출발지: 동대구\n비교축: 가격, 시간, 숙박, 완성도"
+    },
+    {
+      "id": "fuk_scenario",
+      "type": "text",
+      "x": -720,
+      "y": -500,
+      "width": 340,
+      "height": 260,
+      "color": "4",
+      "text": "Scenario: Fukuoka\n상태: 추천\n완성도: 높음\n종착지: 인천\n총액: 약 42.9만~47.6만 원\n판정: 인천 귀국 포함 시 최적"
+    },
+    {
+      "id": "fuk_route",
+      "type": "text",
+      "x": -300,
+      "y": -560,
+      "width": 420,
+      "height": 320,
+      "color": "4",
+      "text": "Route\n동대구 -> 부산 철도\n부산 1박\n김해(PUS) -> 후쿠오카(FUK)\n후쿠오카 1박\n후쿠오카(FUK) -> 인천(ICN)\n\n시간 메모\nPUS -> FUK 약 1시간\nFUK -> ICN 약 1시간 30분"
+    },
+    {
+      "id": "fuk_cost",
+      "type": "text",
+      "x": 180,
+      "y": -560,
+      "width": 420,
+      "height": 340,
+      "color": "4",
+      "text": "Cost Evidence\n동대구 -> 부산: 1.2만~1.71만\n부산 숙소: 3.35만~7.52만\nPUS -> FUK: 약 15,109엔 ~= 약 14.1만\n후쿠오카 숙소: 11.1만\nFUK -> ICN: 13.18만부터\n\n메모\nPUS -> FUK는 3/20~3/21 근접 현재가 기준"
+    },
+    {
+      "id": "tsu_scenario",
+      "type": "text",
+      "x": -720,
+      "y": 20,
+      "width": 340,
+      "height": 260,
+      "color": "3",
+      "text": "Scenario: Tsushima\n상태: 최저가\n완성도: 중간\n종착지: 부산\n총액: 약 26.2만~30.9만 원\n판정: 부산 복귀까지면 최저가"
+    },
+    {
+      "id": "tsu_route",
+      "type": "text",
+      "x": -300,
+      "y": -20,
+      "width": 420,
+      "height": 320,
+      "color": "3",
+      "text": "Route\n동대구 -> 부산 철도\n부산 1박\n부산항 -> 히타카츠\n히타카츠 1박\n히타카츠 -> 부산항\n\n사용자 반영 조건\n3/23 08:40 -> 10:00\n3/24 17:10 -> 18:30"
+    },
+    {
+      "id": "tsu_cost",
+      "type": "text",
+      "x": 180,
+      "y": -10,
+      "width": 420,
+      "height": 320,
+      "color": "3",
+      "text": "Cost Evidence\n동대구 -> 부산: 1.2만~1.71만\n부산 숙소: 3.35만~7.52만\n부산 <-> 히타카츠: 12만\n히타카츠 숙소: 9.68만\n\n메모\n가장 싸지만 인천 귀국형 일정은 아님"
+    },
+    {
+      "id": "osa_scenario",
+      "type": "text",
+      "x": -720,
+      "y": 520,
+      "width": 340,
+      "height": 240,
+      "color": "6",
+      "text": "Scenario: Osaka\n상태: 비추천\n완성도: 낮음\n종착지: 인천 가능\n판정: 가는 편 부재로 성립 불안정"
+    },
+    {
+      "id": "osa_route",
+      "type": "text",
+      "x": -300,
+      "y": 480,
+      "width": 420,
+      "height": 270,
+      "color": "6",
+      "text": "Planned Route\n동대구 -> 부산\n부산 1박\n김해(PUS) -> 간사이(KIX)\n오사카 1박\nKIX -> ICN\n\n문제\n2026-03-23 PUS -> KIX 직항 검색 결과 없음"
+    },
+    {
+      "id": "osa_cost",
+      "type": "text",
+      "x": 180,
+      "y": 500,
+      "width": 420,
+      "height": 250,
+      "color": "6",
+      "text": "Cost Evidence\nPUS -> KIX: 현재 인덱스 검색 결과 없음\nKIX -> ICN: 13,900엔대 예시 존재\n\n메모\n귀국편만 살아 있어도 전체 일정은 불안정"
+    },
+    {
+      "id": "verdict",
+      "type": "text",
+      "x": 700,
+      "y": -80,
+      "width": 360,
+      "height": 320,
+      "color": "5",
+      "text": "Verdict\n1. 인천 귀국 완성형: 후쿠오카\n2. 순수 최저가: 대마도\n3. 오사카: 이번 날짜는 탈락\n\nRule of Thumb\n- 목적지가 인천이면 후쿠오카\n- 부산 복귀면 대마도"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "fromNode": "window",
+      "fromSide": "right",
+      "toNode": "fuk_scenario",
+      "toSide": "left",
+      "label": "compares"
+    },
+    {
+      "id": "e2",
+      "fromNode": "window",
+      "fromSide": "right",
+      "toNode": "tsu_scenario",
+      "toSide": "left",
+      "label": "compares"
+    },
+    {
+      "id": "e3",
+      "fromNode": "window",
+      "fromSide": "right",
+      "toNode": "osa_scenario",
+      "toSide": "left",
+      "label": "compares"
+    },
+    {
+      "id": "e4",
+      "fromNode": "fuk_scenario",
+      "fromSide": "right",
+      "toNode": "fuk_route",
+      "toSide": "left",
+      "label": "route"
+    },
+    {
+      "id": "e5",
+      "fromNode": "fuk_route",
+      "fromSide": "right",
+      "toNode": "fuk_cost",
+      "toSide": "left",
+      "label": "cost"
+    },
+    {
+      "id": "e6",
+      "fromNode": "tsu_scenario",
+      "fromSide": "right",
+      "toNode": "tsu_route",
+      "toSide": "left",
+      "label": "route"
+    },
+    {
+      "id": "e7",
+      "fromNode": "tsu_route",
+      "fromSide": "right",
+      "toNode": "tsu_cost",
+      "toSide": "left",
+      "label": "cost"
+    },
+    {
+      "id": "e8",
+      "fromNode": "osa_scenario",
+      "fromSide": "right",
+      "toNode": "osa_route",
+      "toSide": "left",
+      "label": "route"
+    },
+    {
+      "id": "e9",
+      "fromNode": "osa_route",
+      "fromSide": "right",
+      "toNode": "osa_cost",
+      "toSide": "left",
+      "label": "cost"
+    },
+    {
+      "id": "e10",
+      "fromNode": "fuk_scenario",
+      "fromSide": "right",
+      "toNode": "verdict",
+      "toSide": "left",
+      "label": "best complete"
+    },
+    {
+      "id": "e11",
+      "fromNode": "tsu_scenario",
+      "fromSide": "right",
+      "toNode": "verdict",
+      "toSide": "left",
+      "label": "best cheapest"
+    },
+    {
+      "id": "e12",
+      "fromNode": "osa_scenario",
+      "fromSide": "right",
+      "toNode": "verdict",
+      "toSide": "left",
+      "label": "reject"
+    }
+  ]
+}
