@@ -97,7 +97,6 @@ select {
 }
 
 .topbar-title span,
-.canvas-hint,
 .detail-meta {
   color: var(--muted);
   font-size: 13px;
@@ -269,17 +268,6 @@ select {
   font-size: 11px;
 }
 
-.canvas-hint {
-  position: absolute;
-  right: 20px;
-  bottom: 128px;
-  z-index: 12;
-  padding: 10px 12px;
-  border-radius: 14px;
-  background: rgba(255, 251, 246, 0.82);
-  border: 1px solid rgba(88, 62, 31, 0.08);
-  backdrop-filter: blur(18px);
-}
 
 .chat-shell {
   position: absolute;
@@ -681,10 +669,6 @@ select {
     width: 100%;
     min-height: 48px;
     border-radius: 12px;
-  }
-
-  .canvas-hint {
-    display: none;
   }
 
   .chat-bubble.user,

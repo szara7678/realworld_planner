@@ -16,6 +16,7 @@ window.GRAPH_SCHEMA = {
     TravelRule: {},
     PassProduct: {},
     PlannerSession: {},
+    UserProfile: {},
     Constraint: {},
     Preference: {},
     CandidatePlan: {},

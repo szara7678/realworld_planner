@@ -199,6 +199,19 @@
         "session_scope"
       ]
     },
+    "UserProfile": {
+      "layer": "Planning",
+      "required": [],
+      "properties": [
+        "session_ref",
+        "planner_stage",
+        "origin",
+        "depart_after",
+        "return_depart_before",
+        "total_budget_max",
+        "themes"
+      ]
+    },
     "Constraint": {
       "layer": "Planning",
       "required": [

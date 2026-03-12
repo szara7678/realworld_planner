@@ -65,6 +65,8 @@ LEVEL_KEYWORDS = {
     "medium": ["적당히", "중간", "무난"],
     "low": ["낮게", "적게", "조용히"],
 }
+THEME_SKIP_KEYWORDS = ["아무거나", "상관없어", "상관 없어", "무관", "없음", "노상관"]
+REQUIRED_CONSTRAINT_KEYS = ["origin", "depart_after", "return_depart_before", "total_budget_max"]
 
 PLANNER_HINTS = [
     "출발",
@@ -334,9 +336,10 @@ def create_session_payload(session_id: str | None = None) -> dict[str, Any]:
     return {
         "id": session_id or f"session_{uuid.uuid4().hex[:10]}",
         "status": "active",
-        "stage": "city",
+        "stage": "collect",
         "constraints": {},
         "preferences": {},
+        "theme_prompt_resolved": False,
         "selected_city_id": "",
         "selected_transport_id": "",
         "selected_stay_id": "",
@@ -363,7 +366,11 @@ def update_session_from_query(
         session.update(create_session_payload(keep_id))
         normalized = parse_constraints_from_query(query.replace("새 플랜", "").replace("다시", ""), graph, schema)
     session["constraints"].update(normalized["constraints"])
+    if normalized.get("theme_prompt_resolved"):
+        session["theme_prompt_resolved"] = True
     merge_preferences(session["preferences"], normalized["preferences"])
+    if session.get("preferences", {}).get("themes"):
+        session["theme_prompt_resolved"] = True
     apply_selection_from_query(graph, session, query)
     return session
 
@@ -380,7 +387,7 @@ def merge_preferences(target: dict[str, Any], updates: dict[str, Any]) -> None:
 
 def parse_constraints_from_query(query: str, graph: dict[str, Any], schema: dict[str, Any]) -> dict[str, Any]:
     query_lower = query.lower()
-    result = {"constraints": {}, "preferences": {}, "reset": False}
+    result = {"constraints": {}, "preferences": {}, "reset": False, "theme_prompt_resolved": False}
     if any(keyword in query_lower for keyword in ["새 플랜", "처음부터", "다시 시작", "reset"]):
         result["reset"] = True
     for origin_ref, keywords in ORIGIN_KEYWORDS.items():
@@ -410,6 +417,8 @@ def parse_constraints_from_query(query: str, graph: dict[str, Any], schema: dict
     themes = parse_themes(query_lower)
     if themes:
         result["preferences"]["themes"] = themes
+    if themes or any(keyword in query_lower for keyword in THEME_SKIP_KEYWORDS):
+        result["theme_prompt_resolved"] = True
     pace = parse_keyword_value(query_lower, PACE_KEYWORDS)
     if pace:
         result["preferences"]["pace"] = pace
@@ -566,6 +575,22 @@ def parse_choice(query: str) -> int | None:
 
 def plan_next_step(graph: dict[str, Any], schema: dict[str, Any], session: dict[str, Any]) -> dict[str, Any]:
     index = build_index(graph, schema)
+    missing = missing_requirements(session)
+    if missing:
+        session["stage"] = "collect"
+        matches = search_graph(graph, session_summary_query(session), schema)
+        edge_matches = related_edges(graph, matches)
+        answer, next_question = build_collect_prompt(session, missing[0])
+        return {
+            "answer": answer,
+            "stage": "collect",
+            "session": session,
+            "matches": matches,
+            "matched_edges": edge_matches,
+            "recommendations": [],
+            "alternatives": [],
+            "next_question": next_question,
+        }
     candidates = generate_candidate_plans(graph, index, session)
     matches = search_graph(graph, session_summary_query(session), schema)
     edge_matches = related_edges(graph, matches)
@@ -683,6 +708,72 @@ def session_summary_query(session: dict[str, Any]) -> str:
     if session.get("selected_city_id"):
         parts.append(session["selected_city_id"])
     return " ".join(parts) or "japan travel"
+
+
+def missing_requirements(session: dict[str, Any]) -> list[str]:
+    constraints = session.get("constraints", {})
+    missing = [key for key in REQUIRED_CONSTRAINT_KEYS if not constraints.get(key)]
+    if not session.get("preferences", {}).get("themes") and not session.get("theme_prompt_resolved"):
+        missing.append("themes")
+    return missing
+
+
+def build_collect_prompt(session: dict[str, Any], missing_key: str) -> tuple[str, str]:
+    parts: list[str] = []
+    constraints = session.get("constraints", {})
+    for key in REQUIRED_CONSTRAINT_KEYS:
+        value = constraints.get(key)
+        if value:
+            parts.append(render_requirement_status(key, value))
+    preferences = session.get("preferences", {})
+    themes = preferences.get("themes", [])
+    if themes:
+        parts.append("테마 " + ", ".join(display_label(item) for item in themes))
+    elif session.get("theme_prompt_resolved"):
+        parts.append("테마는 자유 선택")
+    status_line = f"현재까지 반영: {' / '.join(parts)}" if parts else "현재까지 반영된 핵심 제약이 아직 없다."
+    answer = f"{status_line}\n\n{render_missing_question(missing_key)}"
+    return answer, collect_prompt_example(missing_key)
+
+
+def render_requirement_status(key: str, value: Any) -> str:
+    if key == "origin":
+        return f"출발지 {display_label(str(value))}"
+    if key == "depart_after":
+        return f"출발 가능 {format_short_dt(str(value))} 이후"
+    if key == "return_depart_before":
+        return f"일본 출발 {format_short_dt(str(value))} 이전"
+    if key == "total_budget_max":
+        return f"예산 상한 {format_krw(int(value))}"
+    return f"{key} {value}"
+
+
+def render_missing_question(key: str) -> str:
+    if key == "origin":
+        return "플랜을 시작하려면 먼저 한국 출발지를 알아야 한다. 인천(ICN)인지 부산/김해(PUS)인지 알려줘."
+    if key == "depart_after":
+        return "한국에서 언제 이후에 출발 가능한지 알려줘. 날짜와 시각이 있어야 출발편을 걸러낼 수 있다."
+    if key == "return_depart_before":
+        return "일본에서 언제 이전에 출발해야 하는지 알려줘. 귀국편 제한이 있어야 후보를 줄일 수 있다."
+    if key == "total_budget_max":
+        return "총 예산 상한을 알려줘. 항공, 숙소, 활동을 예산 안에서 조합해야 한다."
+    if key == "themes":
+        return "선호 테마를 알려줘. 예를 들면 미식, 온천, 쇼핑, 자연이다. 상관없으면 '아무거나'라고 입력하면 된다."
+    return "추가 제약을 알려줘."
+
+
+def collect_prompt_example(key: str) -> str:
+    if key == "origin":
+        return "예: 인천 출발"
+    if key == "depart_after":
+        return "예: 3/22 18시 이후 출발"
+    if key == "return_depart_before":
+        return "예: 일본에서 3/24 19시 이전 출발"
+    if key == "total_budget_max":
+        return "예: 최대 예산 60만원"
+    if key == "themes":
+        return "예: 미식+온천, 또는 아무거나"
+    return "예: 최대 예산 60만원"
 
 
 def collect_used_matches(matches: list[dict[str, Any]], candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:

@@ -37,15 +37,18 @@
   };
 
   const DEFAULT_YEAR = 2026;
+  const THEME_SKIP_KEYWORDS = ["아무거나", "상관없어", "상관 없어", "무관", "없음", "노상관"];
+  const REQUIRED_CONSTRAINT_KEYS = ["origin", "depart_after", "return_depart_before", "total_budget_max"];
 
   function createSession(sessionId) {
     const now = new Date().toISOString();
     return {
       id: sessionId || `local_session_${Math.random().toString(36).slice(2, 10)}`,
       status: "active",
-      stage: "city",
+      stage: "collect",
       constraints: {},
       preferences: {},
+      themePromptResolved: false,
       selectedCityId: "",
       selectedTransportId: "",
       selectedStayId: "",
@@ -89,11 +92,15 @@
 
   function mergeNormalizedIntoSession(session, normalized) {
     Object.assign(session.constraints, normalized.constraints);
+    if (normalized.themePromptResolved) {
+      session.themePromptResolved = true;
+    }
     Object.entries(normalized.preferences).forEach(([key, value]) => {
       if (key === "themes") {
         const merged = new Set(session.preferences.themes || []);
         value.forEach((item) => merged.add(item));
         session.preferences.themes = Array.from(merged);
+        session.themePromptResolved = true;
       } else {
         session.preferences[key] = value;
       }
@@ -105,6 +112,7 @@
     const result = {
       constraints: {},
       preferences: {},
+      themePromptResolved: false,
       reset: ["새 플랜", "처음부터", "다시 시작", "reset"].some((item) => lower.includes(item)),
     };
 
@@ -133,6 +141,9 @@
 
     const themes = parseThemes(lower);
     if (themes.length) result.preferences.themes = themes;
+    if (themes.length || THEME_SKIP_KEYWORDS.some((item) => lower.includes(item))) {
+      result.themePromptResolved = true;
+    }
     const pace = parseKeywordValue(lower, PACE_KEYWORDS);
     if (pace) result.preferences.pace = pace;
     if (lower.includes("쇼핑")) result.preferences.shopping_level = parseLevel(lower);
@@ -253,6 +264,12 @@
 
   function planNextStep(graph, session) {
     const index = buildIndex(graph);
+    const missing = missingRequirements(session);
+    if (missing.length) {
+      const key = missing[0];
+      session.stage = "collect";
+      return buildCollectResponse(session, key);
+    }
     const candidates = generateCandidatePlans(index, session);
     if (!candidates.length) {
       return {
@@ -345,6 +362,63 @@
       next_question: "새 제약을 추가하거나 '새 플랜'으로 다시 시작할 수 있다.",
       focusNodeIds: selectedCandidate.usedNodeIds,
     };
+  }
+
+  function missingRequirements(session) {
+    const missing = REQUIRED_CONSTRAINT_KEYS.filter((key) => !session.constraints?.[key]);
+    if (!session.preferences?.themes?.length && !session.themePromptResolved) {
+      missing.push("themes");
+    }
+    return missing;
+  }
+
+  function buildCollectResponse(session, missingKey) {
+    const summaries = [];
+    REQUIRED_CONSTRAINT_KEYS.forEach((key) => {
+      if (session.constraints?.[key]) {
+        summaries.push(renderRequirementStatus(key, session.constraints[key]));
+      }
+    });
+    if (session.preferences?.themes?.length) {
+      summaries.push(`테마 ${session.preferences.themes.map(displayLabel).join(", ")}`);
+    } else if (session.themePromptResolved) {
+      summaries.push("테마는 자유 선택");
+    }
+    const statusLine = summaries.length ? `현재까지 반영: ${summaries.join(" / ")}` : "현재까지 반영된 핵심 제약이 아직 없다.";
+    return {
+      answer: `${statusLine}\n\n${renderMissingQuestion(missingKey)}`,
+      stage: "collect",
+      recommendations: [],
+      alternatives: [],
+      next_question: collectPromptExample(missingKey),
+      focusNodeIds: [],
+    };
+  }
+
+  function renderRequirementStatus(key, value) {
+    if (key === "origin") return `출발지 ${displayLabel(value)}`;
+    if (key === "depart_after") return `출발 가능 ${formatShortDate(value)} 이후`;
+    if (key === "return_depart_before") return `일본 출발 ${formatShortDate(value)} 이전`;
+    if (key === "total_budget_max") return `예산 상한 ${formatKrw(value)}`;
+    return `${key} ${displayPlannerValue(value)}`;
+  }
+
+  function renderMissingQuestion(key) {
+    if (key === "origin") return "플랜을 시작하려면 먼저 한국 출발지를 알아야 한다. 인천(ICN)인지 부산/김해(PUS)인지 알려줘.";
+    if (key === "depart_after") return "한국에서 언제 이후에 출발 가능한지 알려줘. 날짜와 시각이 있어야 출발편을 걸러낼 수 있다.";
+    if (key === "return_depart_before") return "일본에서 언제 이전에 출발해야 하는지 알려줘. 귀국편 제한이 있어야 후보를 줄일 수 있다.";
+    if (key === "total_budget_max") return "총 예산 상한을 알려줘. 항공, 숙소, 활동을 예산 안에서 조합해야 한다.";
+    if (key === "themes") return "선호 테마를 알려줘. 예를 들면 미식, 온천, 쇼핑, 자연이다. 상관없으면 '아무거나'라고 입력하면 된다.";
+    return "추가 제약을 알려줘.";
+  }
+
+  function collectPromptExample(key) {
+    if (key === "origin") return "예: 인천 출발";
+    if (key === "depart_after") return "예: 3/22 18시 이후 출발";
+    if (key === "return_depart_before") return "예: 일본에서 3/24 19시 이전 출발";
+    if (key === "total_budget_max") return "예: 최대 예산 60만원";
+    if (key === "themes") return "예: 미식+온천, 또는 아무거나";
+    return "예: 최대 예산 60만원";
   }
 
   function buildIndex(graph) {
@@ -726,6 +800,10 @@
 
   function displayLabel(value) {
     return DISPLAY_LABELS[value] || value;
+  }
+
+  function displayPlannerValue(value) {
+    return Array.isArray(value) ? value.map(displayLabel).join(", ") : displayLabel(value);
   }
 
   function round(value) {
