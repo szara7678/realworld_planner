@@ -43,3 +43,14 @@ OPENROUTER_API_KEY=your_key_here ./run.sh
 - 항공권/숙박은 검색 인덱스 기준 참고값이라 실제 결제 직전 변동될 수 있다
 - PUS -> FUK `2026-03-23` 정확한 동일 날짜 검색 결과는 인덱스 확보가 약해 근접 날짜 값을 사용했다
 - 대마도 시나리오는 사용자가 직접 제시한 왕복 12만 원 및 시간표를 우선 반영했다
+
+## 여행 온톨로지 구조 (범용)
+
+- `ontology/schema/node-types.json`: 노드 타입과 기본 속성 정의
+- `ontology/schema/edge-types.json`: 기본 엣지 타입 정의
+- `ontology/countries/japan/japan.travel-graph.json`: 일본 시작 데이터셋 포인터
+- `graph-state.json`: UI에서 바로 사용하는 일본 시드 그래프
+- `travel-ontology.cypher`: Neo4j 적재용 범용 스키마 + 일본 샘플 데이터
+
+이번 개편으로 기존 시나리오 중심 구조에서 `Country > Region > City > District` 계층과
+문화/축제/음식/맛집/교통허브를 연결하는 범용 구조로 변경했다.

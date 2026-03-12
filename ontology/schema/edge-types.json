@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "description": "Default edge types for travel knowledge graph",
+  "edge_types": [
+    "HAS_REGION",
+    "HAS_CITY",
+    "HAS_DISTRICT",
+    "HAS_CULTURE",
+    "HAS_CUISINE",
+    "HOSTS_FESTIVAL",
+    "HAS_RESTAURANT",
+    "HAS_ATTRACTION",
+    "HAS_TRANSIT_HUB",
+    "SERVES",
+    "APPLIES_TO",
+    "SUPPORTED_BY"
+  ]
+}

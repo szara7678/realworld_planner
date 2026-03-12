@@ -6,12 +6,18 @@
   const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
   const COLORS = {
-    TripWindow: { bg: "#f9e4b7", fg: "#8c5100" },
-    Constraint: { bg: "#ffd7ba", fg: "#9a3412" },
-    Scenario: { bg: "#bfe6dd", fg: "#0f766e" },
-    Transport: { bg: "#d3ddff", fg: "#3949ab" },
-    Lodging: { bg: "#f4d7ea", fg: "#a21caf" },
-    PriceEvidence: { bg: "#ded8cf", fg: "#5f5345" },
+    Country: { bg: "#f9e4b7", fg: "#8c5100" },
+    Region: { bg: "#ffd7ba", fg: "#9a3412" },
+    City: { bg: "#bfe6dd", fg: "#0f766e" },
+    District: { bg: "#d8f3dc", fg: "#166534" },
+    Culture: { bg: "#d3ddff", fg: "#3949ab" },
+    Festival: { bg: "#f4d7ea", fg: "#a21caf" },
+    Cuisine: { bg: "#ffe4c7", fg: "#c2410c" },
+    Restaurant: { bg: "#ffd8a8", fg: "#9a3412" },
+    Attraction: { bg: "#c7d2fe", fg: "#3730a3" },
+    TransitHub: { bg: "#cde7ff", fg: "#1d4ed8" },
+    TravelTip: { bg: "#dcfce7", fg: "#166534" },
+    Reference: { bg: "#ded8cf", fg: "#5f5345" },
     Default: { bg: "#ece2d2", fg: "#5b4632" },
   };
 
@@ -183,10 +189,48 @@
 
   function bindViewport() {
     let dragState = null;
+    const activePointers = new Map();
+    let pinchState = null;
+
+    const localPoint = (event) => {
+      const rect = el.viewport.getBoundingClientRect();
+      return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    };
+
+    const pointerPair = () => {
+      const pointers = Array.from(activePointers.values());
+      return pointers.length >= 2 ? [pointers[0], pointers[1]] : null;
+    };
+
+    const distanceBetween = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+
+    const centerBetween = (a, b) => ({
+      x: (a.x + b.x) / 2,
+      y: (a.y + b.y) / 2,
+    });
 
     el.viewport.addEventListener("pointerdown", (event) => {
       if (event.target.closest(".node") || event.target.closest(".chat-shell")) return;
+      const point = localPoint(event);
+      activePointers.set(event.pointerId, point);
+      if (event.pointerType === "touch") event.preventDefault();
+
+      if (activePointers.size >= 2) {
+        const pair = pointerPair();
+        if (!pair) return;
+        const [p1, p2] = pair;
+        pinchState = {
+          startDistance: Math.max(distanceBetween(p1, p2), 10),
+          startCenter: centerBetween(p1, p2),
+          startView: { ...state.view },
+        };
+        dragState = null;
+        el.viewport.classList.remove("dragging");
+        return;
+      }
+
       dragState = {
+        pointerId: event.pointerId,
         startX: event.clientX,
         startY: event.clientY,
         originX: state.view.x,
@@ -196,16 +240,51 @@
     });
 
     window.addEventListener("pointermove", (event) => {
-      if (!dragState) return;
+      if (activePointers.has(event.pointerId)) {
+        activePointers.set(event.pointerId, localPoint(event));
+      }
+
+      if (pinchState && activePointers.size >= 2) {
+        const pair = pointerPair();
+        if (!pair) return;
+        const [p1, p2] = pair;
+        const currentDistance = Math.max(distanceBetween(p1, p2), 10);
+        const currentCenter = centerBetween(p1, p2);
+        const nextScale = clamp(
+          pinchState.startView.scale * (currentDistance / pinchState.startDistance),
+          0.28,
+          1.8
+        );
+        const worldX = (pinchState.startCenter.x - pinchState.startView.x) / pinchState.startView.scale;
+        const worldY = (pinchState.startCenter.y - pinchState.startView.y) / pinchState.startView.scale;
+        state.view.scale = nextScale;
+        state.view.x = currentCenter.x - worldX * nextScale;
+        state.view.y = currentCenter.y - worldY * nextScale;
+        applyView();
+        return;
+      }
+
+      if (!dragState || dragState.pointerId !== event.pointerId) return;
       state.view.x = dragState.originX + (event.clientX - dragState.startX);
       state.view.y = dragState.originY + (event.clientY - dragState.startY);
       applyView();
     });
 
-    window.addEventListener("pointerup", () => {
-      dragState = null;
-      el.viewport.classList.remove("dragging");
-    });
+    const clearPointer = (event) => {
+      activePointers.delete(event.pointerId);
+      if (dragState?.pointerId === event.pointerId) {
+        dragState = null;
+      }
+
+      if (activePointers.size < 2) {
+        pinchState = null;
+      }
+
+      if (!dragState) el.viewport.classList.remove("dragging");
+    };
+
+    window.addEventListener("pointerup", clearPointer);
+    window.addEventListener("pointercancel", clearPointer);
 
     el.viewport.addEventListener(
       "wheel",
@@ -597,7 +676,7 @@
     state.detailOriginal = null;
     state.detailDraft = {
       id: state.selected.id,
-      type: "Scenario",
+      type: "City",
       title: "새 노드",
       x: 360 + state.graph.nodes.length * 12,
       y: 220 + state.graph.nodes.length * 12,
@@ -971,7 +1050,7 @@
       let score = terms.reduce((sum, term) => sum + countOccurrences(haystack, term), 0);
       if (terms.some((term) => title.includes(term))) score += 3;
       if (title && queryLower.includes(title)) score += 6;
-      if (["Scenario", "Transport", "PriceEvidence"].includes(node.type)) score += 1;
+      if (["Country", "Region", "City", "Festival", "Restaurant", "Reference"].includes(node.type)) score += 1;
       if (!score) return;
       results.push({
         kind: "node",
