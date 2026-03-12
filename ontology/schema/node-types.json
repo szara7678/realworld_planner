@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "description": "Generic travel ontology node types",
+  "node_types": {
+    "Country": ["iso2", "capital", "currency", "language"],
+    "Region": ["region_level", "local_admin_type", "contains"],
+    "City": ["prefecture", "city_class", "best_season"],
+    "District": ["admin_unit", "nightlife", "shopping", "food_spot"],
+    "Culture": ["keyword", "etiquette", "travel_impact"],
+    "Festival": ["month", "city", "festival_type"],
+    "Cuisine": ["style", "budget_per_meal_jpy"],
+    "Restaurant": ["city", "category", "price_range", "near_station", "signature"],
+    "Attraction": ["city", "theme", "best_time"],
+    "TransitHub": ["hub_type", "city", "international"],
+    "TravelTip": ["question_type", "rule"],
+    "Reference": ["url", "source_type"]
+  }
+}

@@ -1,269 +1,623 @@
 window.GRAPH_SEED = {
-  meta: {
-    title: "Japan Trip Graph Workspace",
-    updatedAt: "2026-03-12",
-    source: "Current pricing and schedule snapshot",
+  "meta": {
+    "title": "Japan Travel Knowledge Graph",
+    "updatedAt": "2026-03-12T09:00:00+09:00",
+    "source": "Structured ontology for country/region/city/culture/festival/food/travel Q&A"
   },
-  nodes: [
+  "nodes": [
     {
-      id: "window",
-      type: "TripWindow",
-      title: "3/22-3/24 비교 창",
-      x: 80,
-      y: 120,
-      properties: {
-        depart_after: "2026-03-22 19:00 KST",
-        return_by: "2026-03-24 23:59 KST",
-        origin: "동대구",
-        preference: "최저가 중심",
+      "id": "country_japan",
+      "type": "Country",
+      "title": "일본 (Japan)",
+      "x": 120,
+      "y": 120,
+      "properties": {
+        "iso2": "JP",
+        "capital": "도쿄",
+        "currency": "JPY",
+        "language": "일본어"
       },
-      notes:
-        "출발은 3월 22일 일요일 저녁 7시 이후, 복귀는 3월 24일 화요일 아무때나 가능.",
+      "notes": "여행 질의응답의 루트 국가 노드."
     },
     {
-      id: "constraint_depart",
-      type: "Constraint",
-      title: "출발 제약",
-      x: 80,
-      y: 340,
-      properties: {
-        label: "3/22 19:00 이후 출발",
+      "id": "region_kanto",
+      "type": "Region",
+      "title": "간토",
+      "x": 420,
+      "y": 40,
+      "properties": {
+        "region_level": "region",
+        "local_admin_type": "도/광역권",
+        "contains": "도쿄도·가나가와·치바·사이타마"
       },
-      notes: "당일 밤 바로 일본 입국 가능한 선택지는 제한적.",
+      "notes": "도쿄 중심 대도시권."
     },
     {
-      id: "constraint_icn",
-      type: "Constraint",
-      title: "복귀 선호",
-      x: 80,
-      y: 520,
-      properties: {
-        label: "가능하면 인천 귀국",
+      "id": "region_kansai",
+      "type": "Region",
+      "title": "간사이",
+      "x": 420,
+      "y": 200,
+      "properties": {
+        "region_level": "region",
+        "local_admin_type": "부·현",
+        "contains": "오사카부·교토부·효고현"
       },
-      notes: "완성형 일정 판단에서 가장 큰 기준.",
+      "notes": "역사·미식 여행 수요가 큰 권역."
     },
     {
-      id: "scenario_fukuoka",
-      type: "Scenario",
-      title: "후쿠오카",
-      x: 420,
-      y: 60,
-      properties: {
-        status: "recommended",
-        endpoint: "ICN",
-        total_krw_min: "429369",
-        total_krw_max: "475904",
+      "id": "region_kyushu",
+      "type": "Region",
+      "title": "규슈",
+      "x": 420,
+      "y": 360,
+      "properties": {
+        "region_level": "region",
+        "local_admin_type": "현",
+        "contains": "후쿠오카현·나가사키현·구마모토현"
       },
-      notes: "인천 귀국까지 포함하면 가장 단순하고 현실적인 동선.",
+      "notes": "온천·미식·근거리 항공 접근성이 좋음."
     },
     {
-      id: "scenario_tsushima",
-      type: "Scenario",
-      title: "대마도",
-      x: 420,
-      y: 350,
-      properties: {
-        status: "cheapest_if_busan_return_ok",
-        endpoint: "Busan",
-        total_krw_min: "262280",
-        total_krw_max: "309115",
+      "id": "region_hokkaido",
+      "type": "Region",
+      "title": "홋카이도",
+      "x": 420,
+      "y": 520,
+      "properties": {
+        "region_level": "region",
+        "local_admin_type": "도",
+        "contains": "삿포로시·하코다테시"
       },
-      notes: "부산 왕복까지 허용하면 총액 최저.",
+      "notes": "자연·겨울축제 중심 권역."
     },
     {
-      id: "scenario_osaka",
-      type: "Scenario",
-      title: "오사카",
-      x: 420,
-      y: 640,
-      properties: {
-        status: "not_recommended",
-        endpoint: "ICN",
+      "id": "region_okinawa",
+      "type": "Region",
+      "title": "오키나와",
+      "x": 420,
+      "y": 680,
+      "properties": {
+        "region_level": "region",
+        "local_admin_type": "현",
+        "contains": "나하시·온나손"
       },
-      notes: "2026-03-23 김해->간사이 직항 검색 결과가 비어 성립이 불안정.",
+      "notes": "해양 액티비티 중심 권역."
     },
     {
-      id: "rail_ddg_busan",
-      type: "Transport",
-      title: "동대구 -> 부산 철도",
-      x: 780,
-      y: 70,
-      properties: {
-        mode: "rail",
-        price_krw_min: "12000",
-        price_krw_max: "17100",
-        duration: "50m~1h",
+      "id": "city_tokyo",
+      "type": "City",
+      "title": "도쿄",
+      "x": 760,
+      "y": 20,
+      "properties": {
+        "prefecture": "도쿄도",
+        "city_class": "도쿄23구 중심",
+        "best_season": "3~5월,10~11월"
       },
-      notes: "KTX/SRT 일반실 기준 참고 범위.",
+      "notes": "쇼핑·미식·대중교통 허브."
     },
     {
-      id: "busan_lodging",
-      type: "Lodging",
-      title: "부산 1박",
-      x: 780,
-      y: 220,
-      properties: {
-        price_krw_min: "33466",
-        price_krw_max: "75201",
-        nights: "1",
+      "id": "city_osaka",
+      "type": "City",
+      "title": "오사카",
+      "x": 760,
+      "y": 150,
+      "properties": {
+        "prefecture": "오사카부",
+        "city_class": "정령지정도시",
+        "best_season": "3~5월,10~11월"
       },
-      notes: "부산역/항만 접근성 기준 저가~실용 가격대.",
+      "notes": "간사이 관문, 미식 강세."
     },
     {
-      id: "pus_fuk_flight",
-      type: "Transport",
-      title: "김해 -> 후쿠오카 항공",
-      x: 780,
-      y: 410,
-      properties: {
-        mode: "flight",
-        price_krw_min: "141000",
-        duration: "1h",
-        price_basis: "near-date current search",
+      "id": "city_kyoto",
+      "type": "City",
+      "title": "교토",
+      "x": 760,
+      "y": 280,
+      "properties": {
+        "prefecture": "교토부",
+        "city_class": "정령지정도시",
+        "best_season": "3~5월,11월"
       },
-      notes: "동일 날짜 인덱스가 약해 근접 날짜 현재가를 기준값으로 사용.",
+      "notes": "사찰·전통문화 밀집."
     },
     {
-      id: "fukuoka_lodging",
-      type: "Lodging",
-      title: "후쿠오카 1박",
-      x: 780,
-      y: 590,
-      properties: {
-        price_krw_min: "111093",
-        nights: "1",
+      "id": "city_fukuoka",
+      "type": "City",
+      "title": "후쿠오카",
+      "x": 760,
+      "y": 410,
+      "properties": {
+        "prefecture": "후쿠오카현",
+        "city_class": "정령지정도시",
+        "best_season": "3~5월,10~11월"
       },
-      notes: "하카타권 실용 숙소 현재가 예시.",
+      "notes": "한국 출발 단기여행 인기 도시."
     },
     {
-      id: "fuk_icn_flight",
-      type: "Transport",
-      title: "후쿠오카 -> 인천 항공",
-      x: 1120,
-      y: 410,
-      properties: {
-        mode: "flight",
-        price_krw_min: "131810",
-        duration: "1h30m",
+      "id": "city_sapporo",
+      "type": "City",
+      "title": "삿포로",
+      "x": 760,
+      "y": 540,
+      "properties": {
+        "prefecture": "홋카이도",
+        "city_class": "정령지정도시",
+        "best_season": "2월,7~8월"
       },
-      notes: "2026-03-24 실시간 검색값 기준.",
+      "notes": "눈축제와 맥주 문화."
     },
     {
-      id: "busan_hitakatsu_ferry",
-      type: "Transport",
-      title: "부산 <-> 히타카츠 배편",
-      x: 780,
-      y: 860,
-      properties: {
-        mode: "ferry",
-        price_krw: "120000",
-        outbound: "2026-03-23 08:40->10:00",
-        inbound: "2026-03-24 17:10->18:30",
+      "id": "city_naha",
+      "type": "City",
+      "title": "나하",
+      "x": 760,
+      "y": 670,
+      "properties": {
+        "prefecture": "오키나와현",
+        "city_class": "현청소재지",
+        "best_season": "4~6월,10월"
       },
-      notes: "사용자 제공 실예약 조건 반영.",
+      "notes": "오키나와 입출국·관광 거점."
     },
     {
-      id: "tsushima_lodging",
-      type: "Lodging",
-      title: "히타카츠 1박",
-      x: 1120,
-      y: 860,
-      properties: {
-        price_krw_min: "96814",
-        nights: "1",
+      "id": "district_shinjuku",
+      "type": "District",
+      "title": "신주쿠",
+      "x": 1080,
+      "y": 20,
+      "properties": {
+        "admin_unit": "특별구",
+        "nightlife": "강함",
+        "shopping": "강함"
       },
-      notes: "히타카츠 숙소 현재 예시값.",
+      "notes": "도쿄 핵심 상업지."
     },
     {
-      id: "kix_icn_flight",
-      type: "Transport",
-      title: "간사이 -> 인천 항공",
-      x: 780,
-      y: 1080,
-      properties: {
-        mode: "flight",
-        price_jpy_min: "13900",
-        duration: "2h",
+      "id": "district_dotonbori",
+      "type": "District",
+      "title": "도톤보리",
+      "x": 1080,
+      "y": 150,
+      "properties": {
+        "admin_unit": "구역",
+        "nightlife": "강함",
+        "food_spot": "강함"
       },
-      notes: "귀국편 자체는 있으나 출국편이 문제.",
+      "notes": "오사카 대표 번화가."
     },
     {
-      id: "evidence_fuk_icn",
-      type: "PriceEvidence",
-      title: "FUK -> ICN 근거",
-      x: 1450,
-      y: 300,
-      properties: {
-        url: "https://dsk.ne.jp/m/FUK-ICN/20260324/",
+      "id": "district_gion",
+      "type": "District",
+      "title": "기온",
+      "x": 1080,
+      "y": 280,
+      "properties": {
+        "admin_unit": "구역",
+        "historic_area": "예",
+        "walking": "추천"
       },
-      notes: "2026-03-24 최저가 14,130엔 / 131,810원 확인.",
+      "notes": "교토 전통거리."
     },
     {
-      id: "evidence_pus_kix",
-      type: "PriceEvidence",
-      title: "PUS -> KIX 근거",
-      x: 1120,
-      y: 1080,
-      properties: {
-        url: "https://dsk.ne.jp/m/PUS-KIX/20260323/",
+      "id": "district_tenjin",
+      "type": "District",
+      "title": "텐진",
+      "x": 1080,
+      "y": 410,
+      "properties": {
+        "admin_unit": "구역",
+        "shopping": "강함",
+        "transit_access": "우수"
       },
-      notes: "2026-03-23 직항 검색 결과 없음.",
+      "notes": "후쿠오카 중심 상권."
     },
     {
-      id: "evidence_tsushima_user",
-      type: "PriceEvidence",
-      title: "대마도 사용자 제시값",
-      x: 1450,
-      y: 760,
-      properties: {
-        source: "user-provided",
+      "id": "culture_onsen",
+      "type": "Culture",
+      "title": "온천 문화",
+      "x": 1080,
+      "y": 560,
+      "properties": {
+        "keyword": "온천",
+        "etiquette": "입욕 전 샤워, 수건 탕 안 금지"
       },
-      notes: "왕복 12만원, 08:40->10:00 / 17:10->18:30.",
+      "notes": "전국 공통으로 적용되는 대표 문화."
     },
     {
-      id: "verdict_complete",
-      type: "Verdict",
-      title: "완성형 최적",
-      x: 1450,
-      y: 100,
-      properties: {
-        result: "후쿠오카",
+      "id": "culture_omotenashi",
+      "type": "Culture",
+      "title": "오모테나시",
+      "x": 1080,
+      "y": 690,
+      "properties": {
+        "keyword": "환대",
+        "travel_impact": "서비스 기대치가 높음"
       },
-      notes: "인천 귀국 포함 시 후쿠오카가 가장 안정적.",
+      "notes": "여행 만족도와 직결되는 서비스 문화."
     },
     {
-      id: "verdict_cheapest",
-      type: "Verdict",
-      title: "순수 최저가",
-      x: 1450,
-      y: 540,
-      properties: {
-        result: "대마도",
+      "id": "festival_gion",
+      "type": "Festival",
+      "title": "기온 마츠리",
+      "x": 1420,
+      "y": 120,
+      "properties": {
+        "month": "7월",
+        "city": "교토",
+        "festival_type": "전통 축제"
       },
-      notes: "최종 부산 복귀 허용 시 총액 최저.",
+      "notes": "교토 대표 여름 축제."
     },
+    {
+      "id": "festival_dontaku",
+      "type": "Festival",
+      "title": "하카타 돈타쿠",
+      "x": 1420,
+      "y": 260,
+      "properties": {
+        "month": "5월",
+        "city": "후쿠오카",
+        "festival_type": "퍼레이드"
+      },
+      "notes": "골든위크 대형 거리 행사."
+    },
+    {
+      "id": "festival_snow",
+      "type": "Festival",
+      "title": "삿포로 눈축제",
+      "x": 1420,
+      "y": 400,
+      "properties": {
+        "month": "2월",
+        "city": "삿포로",
+        "festival_type": "겨울 축제"
+      },
+      "notes": "설상 조형물 중심 국제 행사."
+    },
+    {
+      "id": "cuisine_ramen",
+      "type": "Cuisine",
+      "title": "라멘",
+      "x": 1420,
+      "y": 540,
+      "properties": {
+        "style": "돈코츠/쇼유/미소",
+        "budget_per_meal_jpy": "900~1800"
+      },
+      "notes": "도시별 스타일 차이가 큼."
+    },
+    {
+      "id": "cuisine_sushi",
+      "type": "Cuisine",
+      "title": "스시",
+      "x": 1420,
+      "y": 670,
+      "properties": {
+        "style": "회전/오마카세",
+        "budget_per_meal_jpy": "1500~20000"
+      },
+      "notes": "예산 범위가 넓어 여행 질문 빈도가 높음."
+    },
+    {
+      "id": "rest_ichiran",
+      "type": "Restaurant",
+      "title": "이치란 텐진점",
+      "x": 1740,
+      "y": 490,
+      "properties": {
+        "city": "후쿠오카",
+        "category": "라멘",
+        "price_range": "¥~¥¥",
+        "near_station": "텐진미나미"
+      },
+      "notes": "후쿠오카 라멘 질문의 대표 후보."
+    },
+    {
+      "id": "rest_mizutaki",
+      "type": "Restaurant",
+      "title": "하카타 하나미도리",
+      "x": 1740,
+      "y": 590,
+      "properties": {
+        "city": "후쿠오카",
+        "category": "나베",
+        "price_range": "¥¥~¥¥¥",
+        "signature": "미즈타키"
+      },
+      "notes": "로컬 전골 요리 경험용."
+    },
+    {
+      "id": "rest_dotonbori_kukuru",
+      "type": "Restaurant",
+      "title": "쿠쿠루 도톤보리 본점",
+      "x": 1740,
+      "y": 180,
+      "properties": {
+        "city": "오사카",
+        "category": "타코야키",
+        "price_range": "¥",
+        "near_station": "난바"
+      },
+      "notes": "간식형 미식 질문에 자주 매칭."
+    },
+    {
+      "id": "spot_fushimi",
+      "type": "Attraction",
+      "title": "후시미 이나리 신사",
+      "x": 1740,
+      "y": 300,
+      "properties": {
+        "city": "교토",
+        "theme": "신사·도리이",
+        "best_time": "이른 아침"
+      },
+      "notes": "교토 대표 랜드마크."
+    },
+    {
+      "id": "transit_nrt",
+      "type": "TransitHub",
+      "title": "나리타 국제공항 (NRT)",
+      "x": 1740,
+      "y": 20,
+      "properties": {
+        "hub_type": "airport",
+        "city": "도쿄권",
+        "international": "예"
+      },
+      "notes": "도쿄권 국제선 주요 허브."
+    },
+    {
+      "id": "transit_kix",
+      "type": "TransitHub",
+      "title": "간사이 국제공항 (KIX)",
+      "x": 1740,
+      "y": 110,
+      "properties": {
+        "hub_type": "airport",
+        "city": "오사카권",
+        "international": "예"
+      },
+      "notes": "간사이 권역 국제선 허브."
+    },
+    {
+      "id": "transit_fuk",
+      "type": "TransitHub",
+      "title": "후쿠오카 공항 (FUK)",
+      "x": 1740,
+      "y": 420,
+      "properties": {
+        "hub_type": "airport",
+        "city": "후쿠오카",
+        "international": "예"
+      },
+      "notes": "도심 접근이 빠른 공항."
+    },
+    {
+      "id": "tip_railpass",
+      "type": "TravelTip",
+      "title": "교통패스 선택 팁",
+      "x": 1080,
+      "y": 820,
+      "properties": {
+        "question_type": "교통비 절약",
+        "rule": "2회 이상 장거리 신칸센이면 패스 검토"
+      },
+      "notes": "질문형 응답에서 반복적으로 쓰이는 규칙."
+    },
+    {
+      "id": "ref_jnto",
+      "type": "Reference",
+      "title": "JNTO 공식 여행 가이드",
+      "x": 1420,
+      "y": 790,
+      "properties": {
+        "url": "https://www.japan.travel/en/",
+        "source_type": "official"
+      },
+      "notes": "공식 여행 정보 레퍼런스."
+    }
   ],
-  edges: [
-    { id: "e1", from: "window", to: "constraint_depart", label: "HAS_CONSTRAINT" },
-    { id: "e2", from: "window", to: "constraint_icn", label: "HAS_CONSTRAINT" },
-    { id: "e3", from: "window", to: "scenario_fukuoka", label: "COMPARES" },
-    { id: "e4", from: "window", to: "scenario_tsushima", label: "COMPARES" },
-    { id: "e5", from: "window", to: "scenario_osaka", label: "COMPARES" },
-    { id: "e6", from: "scenario_fukuoka", to: "rail_ddg_busan", label: "USES" },
-    { id: "e7", from: "scenario_fukuoka", to: "busan_lodging", label: "STAYS" },
-    { id: "e8", from: "scenario_fukuoka", to: "pus_fuk_flight", label: "USES" },
-    { id: "e9", from: "scenario_fukuoka", to: "fukuoka_lodging", label: "STAYS" },
-    { id: "e10", from: "scenario_fukuoka", to: "fuk_icn_flight", label: "USES" },
-    { id: "e11", from: "scenario_fukuoka", to: "evidence_fuk_icn", label: "SUPPORTED_BY" },
-    { id: "e12", from: "scenario_fukuoka", to: "verdict_complete", label: "SELECTED_AS" },
-    { id: "e13", from: "scenario_tsushima", to: "rail_ddg_busan", label: "USES" },
-    { id: "e14", from: "scenario_tsushima", to: "busan_lodging", label: "STAYS" },
-    { id: "e15", from: "scenario_tsushima", to: "busan_hitakatsu_ferry", label: "USES" },
-    { id: "e16", from: "scenario_tsushima", to: "tsushima_lodging", label: "STAYS" },
-    { id: "e17", from: "scenario_tsushima", to: "evidence_tsushima_user", label: "SUPPORTED_BY" },
-    { id: "e18", from: "scenario_tsushima", to: "verdict_cheapest", label: "SELECTED_AS" },
-    { id: "e19", from: "scenario_osaka", to: "rail_ddg_busan", label: "USES" },
-    { id: "e20", from: "scenario_osaka", to: "kix_icn_flight", label: "CONSIDERS" },
-    { id: "e21", from: "scenario_osaka", to: "evidence_pus_kix", label: "SUPPORTED_BY" },
-  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "country_japan",
+      "to": "region_kanto",
+      "label": "HAS_REGION"
+    },
+    {
+      "id": "e2",
+      "from": "country_japan",
+      "to": "region_kansai",
+      "label": "HAS_REGION"
+    },
+    {
+      "id": "e3",
+      "from": "country_japan",
+      "to": "region_kyushu",
+      "label": "HAS_REGION"
+    },
+    {
+      "id": "e4",
+      "from": "country_japan",
+      "to": "region_hokkaido",
+      "label": "HAS_REGION"
+    },
+    {
+      "id": "e5",
+      "from": "country_japan",
+      "to": "region_okinawa",
+      "label": "HAS_REGION"
+    },
+    {
+      "id": "e6",
+      "from": "region_kanto",
+      "to": "city_tokyo",
+      "label": "HAS_CITY"
+    },
+    {
+      "id": "e7",
+      "from": "region_kansai",
+      "to": "city_osaka",
+      "label": "HAS_CITY"
+    },
+    {
+      "id": "e8",
+      "from": "region_kansai",
+      "to": "city_kyoto",
+      "label": "HAS_CITY"
+    },
+    {
+      "id": "e9",
+      "from": "region_kyushu",
+      "to": "city_fukuoka",
+      "label": "HAS_CITY"
+    },
+    {
+      "id": "e10",
+      "from": "region_hokkaido",
+      "to": "city_sapporo",
+      "label": "HAS_CITY"
+    },
+    {
+      "id": "e11",
+      "from": "region_okinawa",
+      "to": "city_naha",
+      "label": "HAS_CITY"
+    },
+    {
+      "id": "e12",
+      "from": "city_tokyo",
+      "to": "district_shinjuku",
+      "label": "HAS_DISTRICT"
+    },
+    {
+      "id": "e13",
+      "from": "city_osaka",
+      "to": "district_dotonbori",
+      "label": "HAS_DISTRICT"
+    },
+    {
+      "id": "e14",
+      "from": "city_kyoto",
+      "to": "district_gion",
+      "label": "HAS_DISTRICT"
+    },
+    {
+      "id": "e15",
+      "from": "city_fukuoka",
+      "to": "district_tenjin",
+      "label": "HAS_DISTRICT"
+    },
+    {
+      "id": "e16",
+      "from": "country_japan",
+      "to": "culture_onsen",
+      "label": "HAS_CULTURE"
+    },
+    {
+      "id": "e17",
+      "from": "country_japan",
+      "to": "culture_omotenashi",
+      "label": "HAS_CULTURE"
+    },
+    {
+      "id": "e18",
+      "from": "city_kyoto",
+      "to": "festival_gion",
+      "label": "HOSTS_FESTIVAL"
+    },
+    {
+      "id": "e19",
+      "from": "city_fukuoka",
+      "to": "festival_dontaku",
+      "label": "HOSTS_FESTIVAL"
+    },
+    {
+      "id": "e20",
+      "from": "city_sapporo",
+      "to": "festival_snow",
+      "label": "HOSTS_FESTIVAL"
+    },
+    {
+      "id": "e21",
+      "from": "country_japan",
+      "to": "cuisine_ramen",
+      "label": "HAS_CUISINE"
+    },
+    {
+      "id": "e22",
+      "from": "country_japan",
+      "to": "cuisine_sushi",
+      "label": "HAS_CUISINE"
+    },
+    {
+      "id": "e23",
+      "from": "district_tenjin",
+      "to": "rest_ichiran",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e24",
+      "from": "city_fukuoka",
+      "to": "rest_mizutaki",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e25",
+      "from": "district_dotonbori",
+      "to": "rest_dotonbori_kukuru",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e26",
+      "from": "cuisine_ramen",
+      "to": "rest_ichiran",
+      "label": "SERVES"
+    },
+    {
+      "id": "e27",
+      "from": "city_kyoto",
+      "to": "spot_fushimi",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e28",
+      "from": "city_tokyo",
+      "to": "transit_nrt",
+      "label": "HAS_TRANSIT_HUB"
+    },
+    {
+      "id": "e29",
+      "from": "city_osaka",
+      "to": "transit_kix",
+      "label": "HAS_TRANSIT_HUB"
+    },
+    {
+      "id": "e30",
+      "from": "city_fukuoka",
+      "to": "transit_fuk",
+      "label": "HAS_TRANSIT_HUB"
+    },
+    {
+      "id": "e31",
+      "from": "tip_railpass",
+      "to": "region_kansai",
+      "label": "APPLIES_TO"
+    },
+    {
+      "id": "e32",
+      "from": "tip_railpass",
+      "to": "region_kanto",
+      "label": "APPLIES_TO"
+    },
+    {
+      "id": "e33",
+      "from": "country_japan",
+      "to": "ref_jnto",
+      "label": "SUPPORTED_BY"
+    }
+  ]
 };
