@@ -1,423 +1,3185 @@
 {
   "meta": {
-    "title": "Japan Travel Knowledge Graph",
-    "updatedAt": "2026-03-12T09:00:00+09:00",
-    "source": "Structured ontology for country/region/city/culture/festival/food/travel Q&A"
+    "title": "Realworld Planner Japan Travel Graph",
+    "updatedAt": "2026-03-12T19:10:00+09:00",
+    "schema_version": "2.0",
+    "canonical_source": "json-cache",
+    "planner_ready": true,
+    "source": "Constraint-driven travel graph with expanded Japan city coverage for static planner"
   },
   "nodes": [
     {
       "id": "country_japan",
       "type": "Country",
-      "title": "일본 (Japan)",
-      "x": 120,
-      "y": 120,
+      "title": "일본",
+      "x": 80,
+      "y": 100,
+      "aliases": [
+        "Japan"
+      ],
       "properties": {
-        "iso2": "JP",
-        "capital": "도쿄",
+        "country_code": "JP",
+        "canonical_name": "Japan",
         "currency": "JPY",
-        "language": "일본어"
+        "language": "일본어",
+        "best_seasons": "3~5월,10~11월"
       },
-      "notes": "여행 질의응답의 루트 국가 노드."
+      "notes": "일본 일반 여행 지식과 플래너 샘플 세션의 루트 노드."
     },
     {
       "id": "region_kanto",
       "type": "Region",
       "title": "간토",
-      "x": 420,
-      "y": 40,
+      "x": 320,
+      "y": 20,
       "properties": {
-        "region_level": "region",
-        "local_admin_type": "도/광역권",
-        "contains": "도쿄도·가나가와·치바·사이타마"
-      },
-      "notes": "도쿄 중심 대도시권."
+        "country_code": "JP",
+        "canonical_name": "Kanto",
+        "region_kind": "metropolitan",
+        "best_for": "쇼핑,도시야경,전시"
+      }
     },
     {
       "id": "region_kansai",
       "type": "Region",
       "title": "간사이",
-      "x": 420,
-      "y": 200,
+      "x": 320,
+      "y": 150,
       "properties": {
-        "region_level": "region",
-        "local_admin_type": "부·현",
-        "contains": "오사카부·교토부·효고현"
-      },
-      "notes": "역사·미식 여행 수요가 큰 권역."
+        "country_code": "JP",
+        "canonical_name": "Kansai",
+        "region_kind": "historic",
+        "best_for": "미식,전통,야경"
+      }
     },
     {
       "id": "region_kyushu",
       "type": "Region",
       "title": "규슈",
-      "x": 420,
-      "y": 360,
+      "x": 320,
+      "y": 280,
       "properties": {
-        "region_level": "region",
-        "local_admin_type": "현",
-        "contains": "후쿠오카현·나가사키현·구마모토현"
-      },
-      "notes": "온천·미식·근거리 항공 접근성이 좋음."
+        "country_code": "JP",
+        "canonical_name": "Kyushu",
+        "region_kind": "short-haul",
+        "best_for": "단기여행,미식,온천"
+      }
     },
     {
       "id": "region_hokkaido",
       "type": "Region",
       "title": "홋카이도",
-      "x": 420,
-      "y": 520,
+      "x": 320,
+      "y": 410,
       "properties": {
-        "region_level": "region",
-        "local_admin_type": "도",
-        "contains": "삿포로시·하코다테시"
-      },
-      "notes": "자연·겨울축제 중심 권역."
+        "country_code": "JP",
+        "canonical_name": "Hokkaido",
+        "region_kind": "nature",
+        "best_for": "자연,겨울,해산물"
+      }
     },
     {
-      "id": "region_okinawa",
-      "type": "Region",
-      "title": "오키나와",
-      "x": 420,
-      "y": 680,
+      "id": "prefecture_tokyo",
+      "type": "Prefecture",
+      "title": "도쿄도",
+      "x": 560,
+      "y": 20,
       "properties": {
-        "region_level": "region",
-        "local_admin_type": "현",
-        "contains": "나하시·온나손"
-      },
-      "notes": "해양 액티비티 중심 권역."
+        "country_code": "JP",
+        "canonical_name": "Tokyo-to",
+        "prefecture_code": "13",
+        "capital_city": "city_tokyo"
+      }
+    },
+    {
+      "id": "prefecture_osaka",
+      "type": "Prefecture",
+      "title": "오사카부",
+      "x": 560,
+      "y": 120,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Osaka-fu",
+        "prefecture_code": "27",
+        "capital_city": "city_osaka"
+      }
+    },
+    {
+      "id": "prefecture_kyoto",
+      "type": "Prefecture",
+      "title": "교토부",
+      "x": 560,
+      "y": 220,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Kyoto-fu",
+        "prefecture_code": "26",
+        "capital_city": "city_kyoto"
+      }
+    },
+    {
+      "id": "prefecture_fukuoka",
+      "type": "Prefecture",
+      "title": "후쿠오카현",
+      "x": 560,
+      "y": 320,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Fukuoka-ken",
+        "prefecture_code": "40",
+        "capital_city": "city_fukuoka"
+      }
+    },
+    {
+      "id": "prefecture_hokkaido",
+      "type": "Prefecture",
+      "title": "홋카이도",
+      "x": 560,
+      "y": 420,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Hokkaido",
+        "prefecture_code": "01",
+        "capital_city": "city_sapporo"
+      }
+    },
+    {
+      "id": "prefecture_nagasaki",
+      "type": "Prefecture",
+      "title": "나가사키현",
+      "x": 560,
+      "y": 520,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Nagasaki-ken",
+        "prefecture_code": "42",
+        "capital_city": "city_tsushima"
+      }
     },
     {
       "id": "city_tokyo",
       "type": "City",
       "title": "도쿄",
-      "x": 760,
-      "y": 20,
+      "x": 820,
+      "y": 10,
+      "tags": [
+        "쇼핑",
+        "야경",
+        "도시"
+      ],
       "properties": {
-        "prefecture": "도쿄도",
-        "city_class": "도쿄23구 중심",
-        "best_season": "3~5월,10~11월"
+        "country_code": "JP",
+        "canonical_name": "Tokyo",
+        "prefecture_ref": "prefecture_tokyo",
+        "city_class": "metropolis",
+        "best_season": "3~5월,10~11월",
+        "typical_budget_krw": 750000
       },
-      "notes": "쇼핑·미식·대중교통 허브."
+      "notes": "야간 출발 단기여행에서는 예산이 높지만 쇼핑과 전시 선택지가 가장 많다."
     },
     {
       "id": "city_osaka",
       "type": "City",
       "title": "오사카",
-      "x": 760,
-      "y": 150,
+      "x": 820,
+      "y": 120,
+      "tags": [
+        "미식",
+        "야경",
+        "쇼핑"
+      ],
       "properties": {
-        "prefecture": "오사카부",
-        "city_class": "정령지정도시",
-        "best_season": "3~5월,10~11월"
-      },
-      "notes": "간사이 관문, 미식 강세."
+        "country_code": "JP",
+        "canonical_name": "Osaka",
+        "prefecture_ref": "prefecture_osaka",
+        "city_class": "designated-city",
+        "best_season": "3~5월,10~11월",
+        "typical_budget_krw": 590000
+      }
     },
     {
       "id": "city_kyoto",
       "type": "City",
       "title": "교토",
-      "x": 760,
-      "y": 280,
+      "x": 820,
+      "y": 230,
+      "tags": [
+        "전통",
+        "사찰",
+        "역사"
+      ],
       "properties": {
-        "prefecture": "교토부",
-        "city_class": "정령지정도시",
-        "best_season": "3~5월,11월"
-      },
-      "notes": "사찰·전통문화 밀집."
+        "country_code": "JP",
+        "canonical_name": "Kyoto",
+        "prefecture_ref": "prefecture_kyoto",
+        "city_class": "historic-city",
+        "best_season": "3~5월,11월",
+        "typical_budget_krw": 620000
+      }
     },
     {
       "id": "city_fukuoka",
       "type": "City",
       "title": "후쿠오카",
-      "x": 760,
-      "y": 410,
+      "x": 820,
+      "y": 340,
+      "tags": [
+        "단기여행",
+        "미식",
+        "쇼핑"
+      ],
       "properties": {
-        "prefecture": "후쿠오카현",
-        "city_class": "정령지정도시",
-        "best_season": "3~5월,10~11월"
+        "country_code": "JP",
+        "canonical_name": "Fukuoka",
+        "prefecture_ref": "prefecture_fukuoka",
+        "city_class": "designated-city",
+        "best_season": "3~5월,10~11월",
+        "typical_budget_krw": 500000
       },
-      "notes": "한국 출발 단기여행 인기 도시."
+      "notes": "짧은 일정에서도 공항 접근과 식도락 밀도가 높아 단기 플래너 기본 후보로 쓰기 좋다."
     },
     {
       "id": "city_sapporo",
       "type": "City",
       "title": "삿포로",
-      "x": 760,
-      "y": 540,
+      "x": 820,
+      "y": 450,
+      "tags": [
+        "자연",
+        "겨울",
+        "미식"
+      ],
       "properties": {
-        "prefecture": "홋카이도",
-        "city_class": "정령지정도시",
-        "best_season": "2월,7~8월"
-      },
-      "notes": "눈축제와 맥주 문화."
+        "country_code": "JP",
+        "canonical_name": "Sapporo",
+        "prefecture_ref": "prefecture_hokkaido",
+        "city_class": "designated-city",
+        "best_season": "2월,7~8월",
+        "typical_budget_krw": 800000
+      }
     },
     {
-      "id": "city_naha",
+      "id": "city_tsushima",
       "type": "City",
-      "title": "나하",
-      "x": 760,
-      "y": 670,
+      "title": "쓰시마(대마도)",
+      "x": 820,
+      "y": 560,
+      "tags": [
+        "배편",
+        "자연",
+        "저예산"
+      ],
       "properties": {
-        "prefecture": "오키나와현",
-        "city_class": "현청소재지",
-        "best_season": "4~6월,10월"
+        "country_code": "JP",
+        "canonical_name": "Tsushima",
+        "prefecture_ref": "prefecture_nagasaki",
+        "city_class": "island-city",
+        "best_season": "4~6월,9~10월",
+        "typical_budget_krw": 310000
       },
-      "notes": "오키나와 입출국·관광 거점."
+      "notes": "이전 비교 데이터의 대마도 시나리오를 샘플 세션으로 유지하기 위한 도시 노드."
     },
     {
       "id": "district_shinjuku",
       "type": "District",
       "title": "신주쿠",
       "x": 1080,
-      "y": 20,
+      "y": 0,
       "properties": {
-        "admin_unit": "특별구",
-        "nightlife": "강함",
-        "shopping": "강함"
-      },
-      "notes": "도쿄 핵심 상업지."
+        "country_code": "JP",
+        "canonical_name": "Shinjuku",
+        "city_ref": "city_tokyo",
+        "district_kind": "entertainment",
+        "vibe": "nightlife"
+      }
     },
     {
-      "id": "district_dotonbori",
+      "id": "district_namba",
       "type": "District",
-      "title": "도톤보리",
+      "title": "난바",
       "x": 1080,
-      "y": 150,
+      "y": 110,
       "properties": {
-        "admin_unit": "구역",
-        "nightlife": "강함",
-        "food_spot": "강함"
-      },
-      "notes": "오사카 대표 번화가."
+        "country_code": "JP",
+        "canonical_name": "Namba",
+        "city_ref": "city_osaka",
+        "district_kind": "shopping",
+        "vibe": "food-night"
+      }
     },
     {
       "id": "district_gion",
       "type": "District",
       "title": "기온",
       "x": 1080,
-      "y": 280,
+      "y": 220,
       "properties": {
-        "admin_unit": "구역",
-        "historic_area": "예",
-        "walking": "추천"
-      },
-      "notes": "교토 전통거리."
+        "country_code": "JP",
+        "canonical_name": "Gion",
+        "city_ref": "city_kyoto",
+        "district_kind": "historic",
+        "vibe": "traditional"
+      }
     },
     {
       "id": "district_tenjin",
       "type": "District",
       "title": "텐진",
       "x": 1080,
-      "y": 410,
+      "y": 330,
       "properties": {
-        "admin_unit": "구역",
-        "shopping": "강함",
-        "transit_access": "우수"
-      },
-      "notes": "후쿠오카 중심 상권."
+        "country_code": "JP",
+        "canonical_name": "Tenjin",
+        "city_ref": "city_fukuoka",
+        "district_kind": "shopping",
+        "vibe": "compact-urban"
+      }
     },
     {
-      "id": "culture_onsen",
-      "type": "Culture",
-      "title": "온천 문화",
-      "x": 1080,
-      "y": 560,
-      "properties": {
-        "keyword": "온천",
-        "etiquette": "입욕 전 샤워, 수건 탕 안 금지"
-      },
-      "notes": "전국 공통으로 적용되는 대표 문화."
-    },
-    {
-      "id": "culture_omotenashi",
-      "type": "Culture",
-      "title": "오모테나시",
-      "x": 1080,
-      "y": 690,
-      "properties": {
-        "keyword": "환대",
-        "travel_impact": "서비스 기대치가 높음"
-      },
-      "notes": "여행 만족도와 직결되는 서비스 문화."
-    },
-    {
-      "id": "festival_gion",
-      "type": "Festival",
-      "title": "기온 마츠리",
-      "x": 1420,
-      "y": 120,
-      "properties": {
-        "month": "7월",
-        "city": "교토",
-        "festival_type": "전통 축제"
-      },
-      "notes": "교토 대표 여름 축제."
-    },
-    {
-      "id": "festival_dontaku",
-      "type": "Festival",
-      "title": "하카타 돈타쿠",
-      "x": 1420,
-      "y": 260,
-      "properties": {
-        "month": "5월",
-        "city": "후쿠오카",
-        "festival_type": "퍼레이드"
-      },
-      "notes": "골든위크 대형 거리 행사."
-    },
-    {
-      "id": "festival_snow",
-      "type": "Festival",
-      "title": "삿포로 눈축제",
-      "x": 1420,
-      "y": 400,
-      "properties": {
-        "month": "2월",
-        "city": "삿포로",
-        "festival_type": "겨울 축제"
-      },
-      "notes": "설상 조형물 중심 국제 행사."
-    },
-    {
-      "id": "cuisine_ramen",
-      "type": "Cuisine",
-      "title": "라멘",
-      "x": 1420,
-      "y": 540,
-      "properties": {
-        "style": "돈코츠/쇼유/미소",
-        "budget_per_meal_jpy": "900~1800"
-      },
-      "notes": "도시별 스타일 차이가 큼."
-    },
-    {
-      "id": "cuisine_sushi",
-      "type": "Cuisine",
-      "title": "스시",
-      "x": 1420,
-      "y": 670,
-      "properties": {
-        "style": "회전/오마카세",
-        "budget_per_meal_jpy": "1500~20000"
-      },
-      "notes": "예산 범위가 넓어 여행 질문 빈도가 높음."
-    },
-    {
-      "id": "rest_ichiran",
-      "type": "Restaurant",
-      "title": "이치란 텐진점",
-      "x": 1740,
-      "y": 490,
-      "properties": {
-        "city": "후쿠오카",
-        "category": "라멘",
-        "price_range": "¥~¥¥",
-        "near_station": "텐진미나미"
-      },
-      "notes": "후쿠오카 라멘 질문의 대표 후보."
-    },
-    {
-      "id": "rest_mizutaki",
-      "type": "Restaurant",
-      "title": "하카타 하나미도리",
-      "x": 1740,
-      "y": 590,
-      "properties": {
-        "city": "후쿠오카",
-        "category": "나베",
-        "price_range": "¥¥~¥¥¥",
-        "signature": "미즈타키"
-      },
-      "notes": "로컬 전골 요리 경험용."
-    },
-    {
-      "id": "rest_dotonbori_kukuru",
-      "type": "Restaurant",
-      "title": "쿠쿠루 도톤보리 본점",
-      "x": 1740,
-      "y": 180,
-      "properties": {
-        "city": "오사카",
-        "category": "타코야키",
-        "price_range": "¥",
-        "near_station": "난바"
-      },
-      "notes": "간식형 미식 질문에 자주 매칭."
-    },
-    {
-      "id": "spot_fushimi",
-      "type": "Attraction",
-      "title": "후시미 이나리 신사",
-      "x": 1740,
-      "y": 300,
-      "properties": {
-        "city": "교토",
-        "theme": "신사·도리이",
-        "best_time": "이른 아침"
-      },
-      "notes": "교토 대표 랜드마크."
-    },
-    {
-      "id": "transit_nrt",
+      "id": "hub_icn",
       "type": "TransitHub",
-      "title": "나리타 국제공항 (NRT)",
-      "x": 1740,
-      "y": 20,
+      "title": "인천국제공항 (ICN)",
+      "x": 1080,
+      "y": 650,
+      "aliases": [
+        "인천",
+        "ICN",
+        "Incheon"
+      ],
       "properties": {
+        "country_code": "KR",
+        "canonical_name": "Incheon International Airport",
+        "hub_code": "ICN",
         "hub_type": "airport",
-        "city": "도쿄권",
-        "international": "예"
-      },
-      "notes": "도쿄권 국제선 주요 허브."
+        "city_ref": "incheon",
+        "international": true
+      }
     },
     {
-      "id": "transit_kix",
+      "id": "hub_pus",
       "type": "TransitHub",
-      "title": "간사이 국제공항 (KIX)",
-      "x": 1740,
+      "title": "김해공항/부산항 출발권",
+      "x": 1080,
+      "y": 760,
+      "aliases": [
+        "부산",
+        "김해",
+        "PUS"
+      ],
+      "properties": {
+        "country_code": "KR",
+        "canonical_name": "Busan departure pool",
+        "hub_code": "PUS",
+        "hub_type": "airport-port",
+        "city_ref": "busan",
+        "international": true
+      }
+    },
+    {
+      "id": "hub_hnd",
+      "type": "TransitHub",
+      "title": "하네다공항 (HND)",
+      "x": 1340,
+      "y": 0,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Haneda Airport",
+        "hub_code": "HND",
+        "hub_type": "airport",
+        "city_ref": "city_tokyo",
+        "international": true
+      }
+    },
+    {
+      "id": "hub_kix",
+      "type": "TransitHub",
+      "title": "간사이공항 (KIX)",
+      "x": 1340,
       "y": 110,
       "properties": {
+        "country_code": "JP",
+        "canonical_name": "Kansai International Airport",
+        "hub_code": "KIX",
         "hub_type": "airport",
-        "city": "오사카권",
-        "international": "예"
-      },
-      "notes": "간사이 권역 국제선 허브."
+        "city_ref": "city_osaka",
+        "international": true
+      }
     },
     {
-      "id": "transit_fuk",
+      "id": "hub_fuk",
       "type": "TransitHub",
-      "title": "후쿠오카 공항 (FUK)",
-      "x": 1740,
+      "title": "후쿠오카공항 (FUK)",
+      "x": 1340,
+      "y": 220,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Fukuoka Airport",
+        "hub_code": "FUK",
+        "hub_type": "airport",
+        "city_ref": "city_fukuoka",
+        "international": true
+      }
+    },
+    {
+      "id": "hub_cts",
+      "type": "TransitHub",
+      "title": "신치토세공항 (CTS)",
+      "x": 1340,
+      "y": 330,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "New Chitose Airport",
+        "hub_code": "CTS",
+        "hub_type": "airport",
+        "city_ref": "city_sapporo",
+        "international": true
+      }
+    },
+    {
+      "id": "hub_hit",
+      "type": "TransitHub",
+      "title": "히타카츠항",
+      "x": 1340,
+      "y": 440,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Hitakatsu Port",
+        "hub_code": "HIT",
+        "hub_type": "port",
+        "city_ref": "city_tsushima",
+        "international": true
+      }
+    },
+    {
+      "id": "theme_food",
+      "type": "ExperienceTheme",
+      "title": "미식",
+      "x": 1600,
+      "y": 0,
+      "properties": {
+        "theme_code": "food",
+        "question_examples": "맛집 많은 단기여행, 먹방 중심"
+      }
+    },
+    {
+      "id": "theme_shopping",
+      "type": "ExperienceTheme",
+      "title": "쇼핑",
+      "x": 1600,
+      "y": 90,
+      "properties": {
+        "theme_code": "shopping",
+        "question_examples": "백화점, 로프트, 돈키호테 동선"
+      }
+    },
+    {
+      "id": "theme_onsen",
+      "type": "ExperienceTheme",
+      "title": "온천",
+      "x": 1600,
+      "y": 180,
+      "properties": {
+        "theme_code": "onsen",
+        "question_examples": "입욕, 료칸, 휴식"
+      }
+    },
+    {
+      "id": "theme_history",
+      "type": "ExperienceTheme",
+      "title": "역사/전통",
+      "x": 1600,
+      "y": 270,
+      "properties": {
+        "theme_code": "history",
+        "question_examples": "사찰, 전통 거리, 박물관"
+      }
+    },
+    {
+      "id": "theme_nightlife",
+      "type": "ExperienceTheme",
+      "title": "야경/밤거리",
+      "x": 1600,
+      "y": 360,
+      "properties": {
+        "theme_code": "nightlife",
+        "question_examples": "밤에도 재밌는 도시"
+      }
+    },
+    {
+      "id": "theme_nature",
+      "type": "ExperienceTheme",
+      "title": "자연",
+      "x": 1600,
+      "y": 450,
+      "properties": {
+        "theme_code": "nature",
+        "question_examples": "풍경, 산책, 전망"
+      }
+    },
+    {
+      "id": "attraction_teamlab",
+      "type": "Attraction",
+      "title": "teamLab Planets",
+      "x": 1860,
+      "y": 0,
+      "properties": {
+        "place_ref": "city_tokyo",
+        "category": "immersive-art",
+        "best_time": "오후",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 38000
+      }
+    },
+    {
+      "id": "attraction_fushimi",
+      "type": "Attraction",
+      "title": "후시미 이나리 신사",
+      "x": 1860,
+      "y": 100,
+      "properties": {
+        "place_ref": "city_kyoto",
+        "category": "shrine",
+        "best_time": "이른 아침",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 12000
+      }
+    },
+    {
+      "id": "attraction_ohori",
+      "type": "Attraction",
+      "title": "오호리공원",
+      "x": 1860,
+      "y": 200,
+      "properties": {
+        "place_ref": "city_fukuoka",
+        "category": "park",
+        "best_time": "아침",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 7000
+      }
+    },
+    {
+      "id": "attraction_odori",
+      "type": "Attraction",
+      "title": "오도리공원",
+      "x": 1860,
+      "y": 300,
+      "properties": {
+        "place_ref": "city_sapporo",
+        "category": "park",
+        "best_time": "오후",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 9000
+      }
+    },
+    {
+      "id": "restaurant_sushidai",
+      "type": "Restaurant",
+      "title": "스시다이",
+      "x": 1860,
       "y": 420,
       "properties": {
-        "hub_type": "airport",
-        "city": "후쿠오카",
-        "international": "예"
-      },
-      "notes": "도심 접근이 빠른 공항."
+        "place_ref": "city_tokyo",
+        "category": "sushi",
+        "signature": "오마카세",
+        "meal_budget_krw": 65000,
+        "near_hub_ref": "hub_hnd"
+      }
     },
     {
-      "id": "tip_railpass",
-      "type": "TravelTip",
-      "title": "교통패스 선택 팁",
-      "x": 1080,
-      "y": 820,
+      "id": "restaurant_kukuru",
+      "type": "Restaurant",
+      "title": "쿠쿠루 도톤보리 본점",
+      "x": 1860,
+      "y": 510,
       "properties": {
-        "question_type": "교통비 절약",
-        "rule": "2회 이상 장거리 신칸센이면 패스 검토"
-      },
-      "notes": "질문형 응답에서 반복적으로 쓰이는 규칙."
+        "place_ref": "district_namba",
+        "category": "takoyaki",
+        "signature": "타코야키",
+        "meal_budget_krw": 12000,
+        "near_hub_ref": "hub_kix"
+      }
     },
     {
-      "id": "ref_jnto",
-      "type": "Reference",
-      "title": "JNTO 공식 여행 가이드",
-      "x": 1420,
+      "id": "restaurant_ichiran",
+      "type": "Restaurant",
+      "title": "이치란 텐진점",
+      "x": 1860,
+      "y": 600,
+      "properties": {
+        "place_ref": "district_tenjin",
+        "category": "ramen",
+        "signature": "돈코츠 라멘",
+        "meal_budget_krw": 15000,
+        "near_hub_ref": "hub_fuk"
+      }
+    },
+    {
+      "id": "restaurant_soupcurry",
+      "type": "Restaurant",
+      "title": "가라쿠 수프카레",
+      "x": 1860,
+      "y": 690,
+      "properties": {
+        "place_ref": "city_sapporo",
+        "category": "soup-curry",
+        "signature": "스프카레",
+        "meal_budget_krw": 18000,
+        "near_hub_ref": "hub_cts"
+      }
+    },
+    {
+      "id": "lodging_tokyo_ueno",
+      "type": "Lodging",
+      "title": "우에노 비즈니스 호텔",
+      "x": 2120,
+      "y": 0,
+      "properties": {
+        "place_ref": "city_tokyo",
+        "lodging_type": "business-hotel",
+        "checkin_window": "15:00~24:00",
+        "checkout_time": "11:00",
+        "price_band_krw": "mid"
+      }
+    },
+    {
+      "id": "lodging_osaka_namba",
+      "type": "Lodging",
+      "title": "난바 스테이",
+      "x": 2120,
+      "y": 100,
+      "properties": {
+        "place_ref": "district_namba",
+        "lodging_type": "business-hotel",
+        "checkin_window": "15:00~23:30",
+        "checkout_time": "11:00",
+        "price_band_krw": "mid"
+      }
+    },
+    {
+      "id": "lodging_fukuoka_hakata",
+      "type": "Lodging",
+      "title": "하카타 역권 비즈니스 호텔",
+      "x": 2120,
+      "y": 200,
+      "properties": {
+        "place_ref": "city_fukuoka",
+        "lodging_type": "business-hotel",
+        "checkin_window": "15:00~24:00",
+        "checkout_time": "10:00",
+        "price_band_krw": "budget-mid"
+      }
+    },
+    {
+      "id": "lodging_sapporo_odori",
+      "type": "Lodging",
+      "title": "오도리 스테이",
+      "x": 2120,
+      "y": 300,
+      "properties": {
+        "place_ref": "city_sapporo",
+        "lodging_type": "business-hotel",
+        "checkin_window": "15:00~23:00",
+        "checkout_time": "10:00",
+        "price_band_krw": "mid"
+      }
+    },
+    {
+      "id": "lodging_tsushima_hitakatsu",
+      "type": "Lodging",
+      "title": "토요코 인 쓰시마 히타카츠",
+      "x": 2120,
+      "y": 400,
+      "properties": {
+        "place_ref": "city_tsushima",
+        "lodging_type": "business-hotel",
+        "checkin_window": "15:00~22:00",
+        "checkout_time": "10:00",
+        "price_band_krw": "budget"
+      }
+    },
+    {
+      "id": "event_gion",
+      "type": "SeasonalEvent",
+      "title": "기온 마츠리",
+      "x": 2120,
+      "y": 520,
+      "properties": {
+        "place_ref": "city_kyoto",
+        "season": "summer",
+        "start_month": 7,
+        "end_month": 7,
+        "event_type": "festival"
+      }
+    },
+    {
+      "id": "event_snow",
+      "type": "SeasonalEvent",
+      "title": "삿포로 눈축제",
+      "x": 2120,
+      "y": 610,
+      "properties": {
+        "place_ref": "city_sapporo",
+        "season": "winter",
+        "start_month": 2,
+        "end_month": 2,
+        "event_type": "festival"
+      }
+    },
+    {
+      "id": "event_dontaku",
+      "type": "SeasonalEvent",
+      "title": "하카타 돈타쿠",
+      "x": 2120,
+      "y": 700,
+      "properties": {
+        "place_ref": "city_fukuoka",
+        "season": "spring",
+        "start_month": 5,
+        "end_month": 5,
+        "event_type": "festival"
+      }
+    },
+    {
+      "id": "rule_airport_buffer",
+      "type": "TravelRule",
+      "title": "국제선 공항 버퍼",
+      "x": 2380,
+      "y": 0,
+      "properties": {
+        "rule_kind": "airport-buffer",
+        "scope_ref": "country_japan",
+        "impact": "국제선은 출발 2시간 전 공항 도착 권장"
+      }
+    },
+    {
+      "id": "rule_onsen_manners",
+      "type": "TravelRule",
+      "title": "온천 에티켓",
+      "x": 2380,
+      "y": 90,
+      "properties": {
+        "rule_kind": "onsen-manners",
+        "scope_ref": "theme_onsen",
+        "impact": "입욕 전 샤워, 수건을 탕 안에 넣지 않기"
+      }
+    },
+    {
+      "id": "pass_kyushu",
+      "type": "PassProduct",
+      "title": "JR 규슈 레일패스",
+      "x": 2380,
+      "y": 210,
+      "properties": {
+        "coverage_area": "Kyushu",
+        "price_krw": 175000,
+        "eligibility": "외국인 여행객"
+      }
+    },
+    {
+      "id": "pass_tokyo_subway",
+      "type": "PassProduct",
+      "title": "도쿄 서브웨이 티켓",
+      "x": 2380,
+      "y": 300,
+      "properties": {
+        "coverage_area": "Tokyo",
+        "price_krw": 9000,
+        "eligibility": "단기방문객"
+      }
+    },
+    {
+      "id": "transport_icn_fuk",
+      "type": "TransportOption",
+      "title": "ICN -> FUK 직항",
+      "x": 2640,
+      "y": 0,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_icn",
+        "to_ref": "hub_fuk",
+        "city_ref": "city_fukuoka",
+        "route_scope": "international",
+        "booking_hint": "저녁 출발 단기여행에서 활용도 높음"
+      }
+    },
+    {
+      "id": "transport_fuk_icn",
+      "type": "TransportOption",
+      "title": "FUK -> ICN 직항",
+      "x": 2640,
+      "y": 90,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_fuk",
+        "to_ref": "hub_icn",
+        "city_ref": "city_fukuoka",
+        "route_scope": "international",
+        "booking_hint": "24일 저녁 이전 귀국 제약에 잘 맞음"
+      }
+    },
+    {
+      "id": "transport_icn_kix",
+      "type": "TransportOption",
+      "title": "ICN -> KIX 직항",
+      "x": 2640,
+      "y": 180,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_icn",
+        "to_ref": "hub_kix",
+        "city_ref": "city_osaka",
+        "route_scope": "international",
+        "booking_hint": "교토 접근도 가능하지만 간사이 체류 비용은 후쿠오카보다 높음"
+      }
+    },
+    {
+      "id": "transport_kix_icn",
+      "type": "TransportOption",
+      "title": "KIX -> ICN 직항",
+      "x": 2640,
+      "y": 270,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_kix",
+        "to_ref": "hub_icn",
+        "city_ref": "city_osaka",
+        "route_scope": "international",
+        "booking_hint": "낮 귀국편이 있어 업무 전날 단기 일정에도 맞출 수 있음"
+      }
+    },
+    {
+      "id": "transport_icn_hnd",
+      "type": "TransportOption",
+      "title": "ICN -> HND 직항",
+      "x": 2640,
+      "y": 360,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_icn",
+        "to_ref": "hub_hnd",
+        "city_ref": "city_tokyo",
+        "route_scope": "international",
+        "booking_hint": "야간 출발 가능하지만 총예산은 상대적으로 높음"
+      }
+    },
+    {
+      "id": "transport_hnd_icn",
+      "type": "TransportOption",
+      "title": "HND -> ICN 직항",
+      "x": 2640,
+      "y": 450,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_hnd",
+        "to_ref": "hub_icn",
+        "city_ref": "city_tokyo",
+        "route_scope": "international",
+        "booking_hint": "도쿄는 귀국편 조건은 맞아도 숙소 예산이 커짐"
+      }
+    },
+    {
+      "id": "transport_icn_cts",
+      "type": "TransportOption",
+      "title": "ICN -> CTS 직항",
+      "x": 2640,
+      "y": 540,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_icn",
+        "to_ref": "hub_cts",
+        "city_ref": "city_sapporo",
+        "route_scope": "international",
+        "booking_hint": "비수기 외에는 가격 상단이 높다"
+      }
+    },
+    {
+      "id": "transport_cts_icn",
+      "type": "TransportOption",
+      "title": "CTS -> ICN 직항",
+      "x": 2640,
+      "y": 630,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_cts",
+        "to_ref": "hub_icn",
+        "city_ref": "city_sapporo",
+        "route_scope": "international",
+        "booking_hint": "겨울철은 항공가와 체류비가 동시에 올라가는 편"
+      }
+    },
+    {
+      "id": "transport_pus_hit",
+      "type": "TransportOption",
+      "title": "PUS -> HIT 배편",
+      "x": 2640,
+      "y": 720,
+      "properties": {
+        "mode": "ferry",
+        "from_ref": "hub_pus",
+        "to_ref": "hub_hit",
+        "city_ref": "city_tsushima",
+        "route_scope": "international",
+        "booking_hint": "이전 대마도 샘플 세션의 핵심 이동"
+      }
+    },
+    {
+      "id": "transport_hit_pus",
+      "type": "TransportOption",
+      "title": "HIT -> PUS 배편",
+      "x": 2640,
+      "y": 810,
+      "properties": {
+        "mode": "ferry",
+        "from_ref": "hub_hit",
+        "to_ref": "hub_pus",
+        "city_ref": "city_tsushima",
+        "route_scope": "international",
+        "booking_hint": "사용자 입력 기반 샘플 귀국편"
+      }
+    },
+    {
+      "id": "source_jnto",
+      "type": "Source",
+      "title": "JNTO",
+      "x": 2920,
+      "y": 0,
+      "properties": {
+        "source_type": "official",
+        "url": "https://www.japan.travel/",
+        "publisher": "JNTO"
+      }
+    },
+    {
+      "id": "source_skyscanner",
+      "type": "Source",
+      "title": "항공권 검색 스냅샷",
+      "x": 2920,
+      "y": 90,
+      "properties": {
+        "source_type": "aggregator",
+        "url": "https://www.skyscanner.net/",
+        "publisher": "Skyscanner"
+      }
+    },
+    {
+      "id": "source_hotels",
+      "type": "Source",
+      "title": "숙소 검색 스냅샷",
+      "x": 2920,
+      "y": 180,
+      "properties": {
+        "source_type": "aggregator",
+        "url": "https://www.hotels.com/",
+        "publisher": "Hotels"
+      }
+    },
+    {
+      "id": "source_user_note",
+      "type": "Source",
+      "title": "사용자 메모",
+      "x": 2920,
+      "y": 270,
+      "properties": {
+        "source_type": "user-note",
+        "url": "user-provided",
+        "publisher": "workspace"
+      }
+    },
+    {
+      "id": "obs_tx_icn_fuk_20260322",
+      "type": "Observation",
+      "title": "ICN-FUK 3/22 저녁 견적",
+      "x": 3180,
+      "y": 0,
+      "properties": {
+        "subject_ref": "transport_icn_fuk",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 168000,
+          "depart_at": "2026-03-22T18:50:00+09:00",
+          "arrive_at": "2026-03-22T20:10:00+09:00",
+          "duration_minutes": 80,
+          "label": "TW291"
+        },
+        "observed_at": "2026-03-12T10:00:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_tx_fuk_icn_20260324",
+      "type": "Observation",
+      "title": "FUK-ICN 3/24 낮 견적",
+      "x": 3180,
+      "y": 90,
+      "properties": {
+        "subject_ref": "transport_fuk_icn",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 171000,
+          "depart_at": "2026-03-24T15:20:00+09:00",
+          "arrive_at": "2026-03-24T16:45:00+09:00",
+          "duration_minutes": 85,
+          "label": "7C1402"
+        },
+        "observed_at": "2026-03-12T10:05:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_tx_icn_kix_20260322",
+      "type": "Observation",
+      "title": "ICN-KIX 3/22 저녁 견적",
+      "x": 3180,
+      "y": 180,
+      "properties": {
+        "subject_ref": "transport_icn_kix",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 211000,
+          "depart_at": "2026-03-22T19:05:00+09:00",
+          "arrive_at": "2026-03-22T21:00:00+09:00",
+          "duration_minutes": 115,
+          "label": "BX172"
+        },
+        "observed_at": "2026-03-12T10:10:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_tx_kix_icn_20260324",
+      "type": "Observation",
+      "title": "KIX-ICN 3/24 귀국 견적",
+      "x": 3180,
+      "y": 270,
+      "properties": {
+        "subject_ref": "transport_kix_icn",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 196000,
+          "depart_at": "2026-03-24T12:10:00+09:00",
+          "arrive_at": "2026-03-24T14:10:00+09:00",
+          "duration_minutes": 120,
+          "label": "ZE614"
+        },
+        "observed_at": "2026-03-12T10:15:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_tx_icn_hnd_20260322",
+      "type": "Observation",
+      "title": "ICN-HND 3/22 저녁 견적",
+      "x": 3180,
+      "y": 360,
+      "properties": {
+        "subject_ref": "transport_icn_hnd",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 265000,
+          "depart_at": "2026-03-22T19:30:00+09:00",
+          "arrive_at": "2026-03-22T21:50:00+09:00",
+          "duration_minutes": 140,
+          "label": "OZ108"
+        },
+        "observed_at": "2026-03-12T10:20:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_tx_hnd_icn_20260324",
+      "type": "Observation",
+      "title": "HND-ICN 3/24 귀국 견적",
+      "x": 3180,
+      "y": 450,
+      "properties": {
+        "subject_ref": "transport_hnd_icn",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 248000,
+          "depart_at": "2026-03-24T16:20:00+09:00",
+          "arrive_at": "2026-03-24T18:50:00+09:00",
+          "duration_minutes": 150,
+          "label": "KE720"
+        },
+        "observed_at": "2026-03-12T10:25:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_tx_icn_cts_20260322",
+      "type": "Observation",
+      "title": "ICN-CTS 3/22 저녁 견적",
+      "x": 3180,
+      "y": 540,
+      "properties": {
+        "subject_ref": "transport_icn_cts",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 298000,
+          "depart_at": "2026-03-22T18:40:00+09:00",
+          "arrive_at": "2026-03-22T21:15:00+09:00",
+          "duration_minutes": 155,
+          "label": "7C1901"
+        },
+        "observed_at": "2026-03-12T10:30:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_tx_cts_icn_20260324",
+      "type": "Observation",
+      "title": "CTS-ICN 3/24 귀국 견적",
+      "x": 3180,
+      "y": 630,
+      "properties": {
+        "subject_ref": "transport_cts_icn",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 284000,
+          "depart_at": "2026-03-24T14:15:00+09:00",
+          "arrive_at": "2026-03-24T17:20:00+09:00",
+          "duration_minutes": 185,
+          "label": "BX188"
+        },
+        "observed_at": "2026-03-12T10:35:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_tx_pus_hit_20260323",
+      "type": "Observation",
+      "title": "PUS-HIT 3/23 배편 견적",
+      "x": 3180,
+      "y": 720,
+      "properties": {
+        "subject_ref": "transport_pus_hit",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 120000,
+          "depart_at": "2026-03-23T08:40:00+09:00",
+          "arrive_at": "2026-03-23T10:00:00+09:00",
+          "duration_minutes": 80,
+          "label": "Nova Ferry"
+        },
+        "observed_at": "2026-03-12T09:00:00+09:00",
+        "source_ref": "source_user_note",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_tx_hit_pus_20260324",
+      "type": "Observation",
+      "title": "HIT-PUS 3/24 배편 견적",
+      "x": 3180,
+      "y": 810,
+      "properties": {
+        "subject_ref": "transport_hit_pus",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 120000,
+          "depart_at": "2026-03-24T17:10:00+09:00",
+          "arrive_at": "2026-03-24T18:30:00+09:00",
+          "duration_minutes": 80,
+          "label": "Sea Flower"
+        },
+        "observed_at": "2026-03-12T09:05:00+09:00",
+        "source_ref": "source_user_note",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_stay_tokyo_20260323",
+      "type": "Observation",
+      "title": "도쿄 숙소 3/23 견적",
+      "x": 3440,
+      "y": 0,
+      "properties": {
+        "subject_ref": "lodging_tokyo_ueno",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 182000,
+          "rating": 8.3,
+          "checkin_window": "15:00~24:00"
+        },
+        "observed_at": "2026-03-12T10:40:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_stay_osaka_20260323",
+      "type": "Observation",
+      "title": "오사카 숙소 3/23 견적",
+      "x": 3440,
+      "y": 90,
+      "properties": {
+        "subject_ref": "lodging_osaka_namba",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 143000,
+          "rating": 8.6,
+          "checkin_window": "15:00~23:30"
+        },
+        "observed_at": "2026-03-12T10:45:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_stay_fukuoka_20260323",
+      "type": "Observation",
+      "title": "후쿠오카 숙소 3/23 견적",
+      "x": 3440,
+      "y": 180,
+      "properties": {
+        "subject_ref": "lodging_fukuoka_hakata",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 118000,
+          "rating": 8.8,
+          "checkin_window": "15:00~24:00"
+        },
+        "observed_at": "2026-03-12T10:50:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_stay_sapporo_20260323",
+      "type": "Observation",
+      "title": "삿포로 숙소 3/23 견적",
+      "x": 3440,
+      "y": 270,
+      "properties": {
+        "subject_ref": "lodging_sapporo_odori",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 169000,
+          "rating": 8.4,
+          "checkin_window": "15:00~23:00"
+        },
+        "observed_at": "2026-03-12T10:55:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "obs_stay_tsushima_20260323",
+      "type": "Observation",
+      "title": "대마도 숙소 3/23 견적",
+      "x": 3440,
+      "y": 360,
+      "properties": {
+        "subject_ref": "lodging_tsushima_hitakatsu",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 97000,
+          "rating": 8.1,
+          "checkin_window": "15:00~22:00"
+        },
+        "observed_at": "2026-03-12T09:10:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      }
+    },
+    {
+      "id": "session_japan_shorttrip",
+      "type": "PlannerSession",
+      "title": "3/22-3/24 일본 단기 비교 샘플",
+      "x": 3440,
+      "y": 520,
+      "properties": {
+        "status": "sample",
+        "current_stage": "summary",
+        "origin_ref": "hub_icn",
+        "session_scope": "legacy-sample"
+      },
+      "notes": "기존 후쿠오카/대마도/오사카 비교 데이터를 샘플 세션으로 유지."
+    },
+    {
+      "id": "constraint_origin_icn",
+      "type": "Constraint",
+      "title": "출발지: 인천",
+      "x": 3700,
+      "y": 520,
+      "properties": {
+        "constraint_kind": "origin",
+        "operator": "=",
+        "value": "hub_icn",
+        "normalized_value": "ICN"
+      }
+    },
+    {
+      "id": "constraint_depart_after_20260322_1800",
+      "type": "Constraint",
+      "title": "3/22 18시 이후 출발",
+      "x": 3700,
+      "y": 590,
+      "properties": {
+        "constraint_kind": "depart_after",
+        "operator": ">=",
+        "value": "2026-03-22T18:00:00+09:00",
+        "normalized_value": "2026-03-22T18:00:00+09:00"
+      }
+    },
+    {
+      "id": "constraint_return_before_20260324_1900",
+      "type": "Constraint",
+      "title": "3/24 19시 이전 일본 출발",
+      "x": 3700,
+      "y": 660,
+      "properties": {
+        "constraint_kind": "return_depart_before",
+        "operator": "<=",
+        "value": "2026-03-24T19:00:00+09:00",
+        "normalized_value": "2026-03-24T19:00:00+09:00"
+      }
+    },
+    {
+      "id": "constraint_budget_700000",
+      "type": "Constraint",
+      "title": "최대 예산 70만원",
+      "x": 3700,
+      "y": 730,
+      "properties": {
+        "constraint_kind": "total_budget_max",
+        "operator": "<=",
+        "value": 700000,
+        "normalized_value": 700000
+      }
+    },
+    {
+      "id": "pref_food",
+      "type": "Preference",
+      "title": "미식 선호",
+      "x": 3960,
+      "y": 520,
+      "properties": {
+        "preference_kind": "themes",
+        "value": "theme_food",
+        "weight": 0.9
+      }
+    },
+    {
+      "id": "pref_shopping",
+      "type": "Preference",
+      "title": "쇼핑 선호",
+      "x": 3960,
+      "y": 600,
+      "properties": {
+        "preference_kind": "themes",
+        "value": "theme_shopping",
+        "weight": 0.75
+      }
+    },
+    {
+      "id": "sample_candidate_fukuoka",
+      "type": "CandidatePlan",
+      "title": "샘플안: 후쿠오카",
+      "x": 4220,
+      "y": 500,
+      "properties": {
+        "session_ref": "session_japan_shorttrip",
+        "status": "recommended",
+        "score": 92,
+        "city_ref": "city_fukuoka",
+        "estimated_total_krw": 492000,
+        "conflict_summary": ""
+      }
+    },
+    {
+      "id": "sample_candidate_tsushima",
+      "type": "CandidatePlan",
+      "title": "샘플안: 대마도",
+      "x": 4220,
+      "y": 600,
+      "properties": {
+        "session_ref": "session_japan_shorttrip",
+        "status": "cheapest_if_busan_origin",
+        "score": 78,
+        "city_ref": "city_tsushima",
+        "estimated_total_krw": 337000,
+        "conflict_summary": "부산 출발 기준일 때만 성립"
+      }
+    },
+    {
+      "id": "sample_candidate_osaka",
+      "type": "CandidatePlan",
+      "title": "샘플안: 오사카",
+      "x": 4220,
+      "y": 700,
+      "properties": {
+        "session_ref": "session_japan_shorttrip",
+        "status": "viable",
+        "score": 84,
+        "city_ref": "city_osaka",
+        "estimated_total_krw": 590000,
+        "conflict_summary": ""
+      }
+    },
+    {
+      "id": "prefecture_kanagawa",
+      "type": "Prefecture",
+      "title": "가나가와현",
+      "x": 560,
+      "y": 610,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Kanagawa-ken",
+        "prefecture_code": "14",
+        "capital_city": "city_yokohama"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "prefecture_aichi",
+      "type": "Prefecture",
+      "title": "아이치현",
+      "x": 560,
+      "y": 700,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Aichi-ken",
+        "prefecture_code": "23",
+        "capital_city": "city_nagoya"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "prefecture_hyogo",
+      "type": "Prefecture",
+      "title": "효고현",
+      "x": 560,
       "y": 790,
       "properties": {
-        "url": "https://www.japan.travel/en/",
-        "source_type": "official"
+        "country_code": "JP",
+        "canonical_name": "Hyogo-ken",
+        "prefecture_code": "28",
+        "capital_city": "city_kobe"
       },
-      "notes": "공식 여행 정보 레퍼런스."
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "prefecture_okinawa",
+      "type": "Prefecture",
+      "title": "오키나와현",
+      "x": 560,
+      "y": 880,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Okinawa-ken",
+        "prefecture_code": "47",
+        "capital_city": "city_naha"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "prefecture_oita",
+      "type": "Prefecture",
+      "title": "오이타현",
+      "x": 560,
+      "y": 970,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Oita-ken",
+        "prefecture_code": "44",
+        "capital_city": "city_beppu"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "city_yokohama",
+      "type": "City",
+      "title": "요코하마",
+      "x": 820,
+      "y": 670,
+      "tags": [
+        "야경",
+        "쇼핑",
+        "도시산책"
+      ],
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Yokohama",
+        "prefecture_ref": "prefecture_kanagawa",
+        "city_class": "designated-city",
+        "best_season": "3~5월,10~11월",
+        "typical_budget_krw": 640000
+      },
+      "notes": "도쿄권에서 야경과 항만 산책, 쇼핑을 섞기 좋은 도시.",
+      "aliases": [],
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "city_nagoya",
+      "type": "City",
+      "title": "나고야",
+      "x": 820,
+      "y": 780,
+      "tags": [
+        "미식",
+        "성",
+        "도시"
+      ],
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Nagoya",
+        "prefecture_ref": "prefecture_aichi",
+        "city_class": "designated-city",
+        "best_season": "3~5월,10~11월",
+        "typical_budget_krw": 560000
+      },
+      "notes": "중부권 허브로 미소카츠, 성, 도심 이동이 강점.",
+      "aliases": [],
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "city_kobe",
+      "type": "City",
+      "title": "고베",
+      "x": 820,
+      "y": 890,
+      "tags": [
+        "야경",
+        "미식",
+        "항만"
+      ],
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Kobe",
+        "prefecture_ref": "prefecture_hyogo",
+        "city_class": "designated-city",
+        "best_season": "3~5월,10~11월",
+        "typical_budget_krw": 610000
+      },
+      "notes": "간사이권에서 항만 야경과 고베규 테마가 강하다.",
+      "aliases": [],
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "city_naha",
+      "type": "City",
+      "title": "나하",
+      "x": 820,
+      "y": 1000,
+      "tags": [
+        "바다",
+        "휴양",
+        "쇼핑"
+      ],
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Naha",
+        "prefecture_ref": "prefecture_okinawa",
+        "city_class": "capital-city",
+        "best_season": "4~6월,10~11월",
+        "typical_budget_krw": 670000
+      },
+      "notes": "짧은 일정에서도 휴양 느낌과 시내 쇼핑을 동시에 잡을 수 있다.",
+      "aliases": [],
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "city_beppu",
+      "type": "City",
+      "title": "벳푸",
+      "x": 820,
+      "y": 1110,
+      "tags": [
+        "온천",
+        "휴식",
+        "로컬"
+      ],
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Beppu",
+        "prefecture_ref": "prefecture_oita",
+        "city_class": "onsen-city",
+        "best_season": "10~3월",
+        "typical_budget_krw": 590000
+      },
+      "notes": "온천 우선 제약에서 규슈권 대안으로 넣기 좋은 도시.",
+      "aliases": [],
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "city_hakodate",
+      "type": "City",
+      "title": "하코다테",
+      "x": 820,
+      "y": 1220,
+      "tags": [
+        "야경",
+        "항만",
+        "해산물"
+      ],
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Hakodate",
+        "prefecture_ref": "prefecture_hokkaido",
+        "city_class": "core-city",
+        "best_season": "5~10월",
+        "typical_budget_krw": 760000
+      },
+      "notes": "삿포로보다 조용하고 항만 야경 선호에 강한 대안.",
+      "aliases": [],
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "district_minatomirai",
+      "type": "District",
+      "title": "미나토미라이",
+      "x": 1080,
+      "y": 650,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Minatomirai",
+        "city_ref": "city_yokohama",
+        "district_kind": "waterfront",
+        "vibe": "night-view"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "district_sakae",
+      "type": "District",
+      "title": "사카에",
+      "x": 1080,
+      "y": 760,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Sakae",
+        "city_ref": "city_nagoya",
+        "district_kind": "shopping",
+        "vibe": "urban-core"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "district_sannomiya",
+      "type": "District",
+      "title": "산노미야",
+      "x": 1080,
+      "y": 870,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Sannomiya",
+        "city_ref": "city_kobe",
+        "district_kind": "downtown",
+        "vibe": "night-food"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "district_kokusai",
+      "type": "District",
+      "title": "국제거리",
+      "x": 1080,
+      "y": 980,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Kokusai-dori",
+        "city_ref": "city_naha",
+        "district_kind": "shopping",
+        "vibe": "resort-urban"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "district_kannawa",
+      "type": "District",
+      "title": "간나와 온천지구",
+      "x": 1080,
+      "y": 1090,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Kannawa",
+        "city_ref": "city_beppu",
+        "district_kind": "onsen",
+        "vibe": "slow-relax"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "district_motomachi",
+      "type": "District",
+      "title": "모토마치",
+      "x": 1080,
+      "y": 1200,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Motomachi",
+        "city_ref": "city_hakodate",
+        "district_kind": "harbor",
+        "vibe": "historic-night"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "hub_ngo",
+      "type": "TransitHub",
+      "title": "주부국제공항 (NGO)",
+      "x": 1340,
+      "y": 740,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Chubu Centrair International Airport",
+        "hub_code": "NGO",
+        "hub_type": "airport",
+        "city_ref": "city_nagoya",
+        "international": true
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "hub_oka",
+      "type": "TransitHub",
+      "title": "나하공항 (OKA)",
+      "x": 1340,
+      "y": 850,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Naha Airport",
+        "hub_code": "OKA",
+        "hub_type": "airport",
+        "city_ref": "city_naha",
+        "international": true
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "hub_oit",
+      "type": "TransitHub",
+      "title": "오이타공항 (OIT)",
+      "x": 1340,
+      "y": 960,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Oita Airport",
+        "hub_code": "OIT",
+        "hub_type": "airport",
+        "city_ref": "city_beppu",
+        "international": true
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "hub_hkd",
+      "type": "TransitHub",
+      "title": "하코다테공항 (HKD)",
+      "x": 1340,
+      "y": 1070,
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Hakodate Airport",
+        "hub_code": "HKD",
+        "hub_type": "airport",
+        "city_ref": "city_hakodate",
+        "international": true
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "attraction_sensoji",
+      "type": "Attraction",
+      "title": "센소지",
+      "x": 1860,
+      "y": 790,
+      "properties": {
+        "place_ref": "city_tokyo",
+        "category": "temple",
+        "best_time": "아침",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 10000
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "attraction_kiyomizu",
+      "type": "Attraction",
+      "title": "기요미즈데라",
+      "x": 1860,
+      "y": 880,
+      "properties": {
+        "place_ref": "city_kyoto",
+        "category": "temple",
+        "best_time": "오전",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 16000
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "attraction_minatomirai",
+      "type": "Attraction",
+      "title": "요코하마 코스모월드/미나토미라이 산책",
+      "x": 1860,
+      "y": 970,
+      "properties": {
+        "place_ref": "city_yokohama",
+        "category": "waterfront",
+        "best_time": "해질녘",
+        "typical_duration_hours": 3,
+        "typical_budget_krw": 22000
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "attraction_nagoya_castle",
+      "type": "Attraction",
+      "title": "나고야성",
+      "x": 1860,
+      "y": 1060,
+      "properties": {
+        "place_ref": "city_nagoya",
+        "category": "castle",
+        "best_time": "오전",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 14000
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "attraction_harborland",
+      "type": "Attraction",
+      "title": "고베 하버랜드",
+      "x": 1860,
+      "y": 1150,
+      "properties": {
+        "place_ref": "city_kobe",
+        "category": "waterfront",
+        "best_time": "저녁",
+        "typical_duration_hours": 3,
+        "typical_budget_krw": 20000
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "attraction_shurijo",
+      "type": "Attraction",
+      "title": "슈리성 공원",
+      "x": 1860,
+      "y": 1240,
+      "properties": {
+        "place_ref": "city_naha",
+        "category": "heritage",
+        "best_time": "오전",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 15000
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "attraction_beppu_hells",
+      "type": "Attraction",
+      "title": "벳푸 지옥온천 순례",
+      "x": 1860,
+      "y": 1330,
+      "properties": {
+        "place_ref": "city_beppu",
+        "category": "onsen-sight",
+        "best_time": "오전",
+        "typical_duration_hours": 3,
+        "typical_budget_krw": 23000
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "attraction_hakodate_mountain",
+      "type": "Attraction",
+      "title": "하코다테산 전망대",
+      "x": 1860,
+      "y": 1420,
+      "properties": {
+        "place_ref": "city_hakodate",
+        "category": "night-view",
+        "best_time": "해질녘",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 18000
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "attraction_canal_city",
+      "type": "Attraction",
+      "title": "캐널시티 하카타",
+      "x": 1860,
+      "y": 1510,
+      "properties": {
+        "place_ref": "city_fukuoka",
+        "category": "shopping-complex",
+        "best_time": "오후",
+        "typical_duration_hours": 3,
+        "typical_budget_krw": 25000
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "attraction_dotonbori_walk",
+      "type": "Attraction",
+      "title": "도톤보리 강변 산책",
+      "x": 1860,
+      "y": 1600,
+      "properties": {
+        "place_ref": "city_osaka",
+        "category": "night-walk",
+        "best_time": "저녁",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 10000
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "restaurant_nishiki",
+      "type": "Restaurant",
+      "title": "니시키 시장 먹거리 라인",
+      "x": 2120,
+      "y": 790,
+      "properties": {
+        "place_ref": "city_kyoto",
+        "category": "market-food",
+        "signature": "교토 먹거리",
+        "meal_budget_krw": 22000,
+        "near_hub_ref": "hub_kix"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "restaurant_yokohama_chinatown",
+      "type": "Restaurant",
+      "title": "요코하마 차이나타운",
+      "x": 2120,
+      "y": 880,
+      "properties": {
+        "place_ref": "city_yokohama",
+        "category": "chinatown",
+        "signature": "딤섬/중화가",
+        "meal_budget_krw": 28000,
+        "near_hub_ref": "hub_hnd"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "restaurant_yabaton",
+      "type": "Restaurant",
+      "title": "야바톤 본점",
+      "x": 2120,
+      "y": 970,
+      "properties": {
+        "place_ref": "city_nagoya",
+        "category": "miso-katsu",
+        "signature": "미소카츠",
+        "meal_budget_krw": 23000,
+        "near_hub_ref": "hub_ngo"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "restaurant_mouriya",
+      "type": "Restaurant",
+      "title": "모리야 고베규 스테이크",
+      "x": 2120,
+      "y": 1060,
+      "properties": {
+        "place_ref": "city_kobe",
+        "category": "teppanyaki",
+        "signature": "고베규",
+        "meal_budget_krw": 65000,
+        "near_hub_ref": "hub_kix"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "restaurant_jacks",
+      "type": "Restaurant",
+      "title": "잭스 스테이크하우스",
+      "x": 2120,
+      "y": 1150,
+      "properties": {
+        "place_ref": "city_naha",
+        "category": "steak",
+        "signature": "오키나와 스테이크",
+        "meal_budget_krw": 26000,
+        "near_hub_ref": "hub_oka"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "restaurant_jigoku",
+      "type": "Restaurant",
+      "title": "지옥무시 공방",
+      "x": 2120,
+      "y": 1240,
+      "properties": {
+        "place_ref": "city_beppu",
+        "category": "onsen-steam",
+        "signature": "지옥찜",
+        "meal_budget_krw": 24000,
+        "near_hub_ref": "hub_oit"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "restaurant_lucky_pierrot",
+      "type": "Restaurant",
+      "title": "럭키 피에로",
+      "x": 2120,
+      "y": 1330,
+      "properties": {
+        "place_ref": "city_hakodate",
+        "category": "local-burger",
+        "signature": "차이니즈 치킨 버거",
+        "meal_budget_krw": 16000,
+        "near_hub_ref": "hub_hkd"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "lodging_kyoto_station",
+      "type": "Lodging",
+      "title": "교토역 비즈니스 호텔",
+      "x": 2380,
+      "y": 760,
+      "properties": {
+        "place_ref": "city_kyoto",
+        "lodging_type": "business-hotel",
+        "checkin_window": "15:00~24:00",
+        "checkout_time": "10:00",
+        "price_band_krw": "mid"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "lodging_yokohama_minato",
+      "type": "Lodging",
+      "title": "미나토미라이 스테이",
+      "x": 2380,
+      "y": 850,
+      "properties": {
+        "place_ref": "city_yokohama",
+        "lodging_type": "city-hotel",
+        "checkin_window": "15:00~24:00",
+        "checkout_time": "11:00",
+        "price_band_krw": "mid-high"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "lodging_nagoya_sakae",
+      "type": "Lodging",
+      "title": "사카에 비즈니스 호텔",
+      "x": 2380,
+      "y": 940,
+      "properties": {
+        "place_ref": "city_nagoya",
+        "lodging_type": "business-hotel",
+        "checkin_window": "15:00~24:00",
+        "checkout_time": "10:00",
+        "price_band_krw": "mid"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "lodging_kobe_sannomiya",
+      "type": "Lodging",
+      "title": "산노미야 시티 호텔",
+      "x": 2380,
+      "y": 1030,
+      "properties": {
+        "place_ref": "city_kobe",
+        "lodging_type": "city-hotel",
+        "checkin_window": "15:00~23:30",
+        "checkout_time": "11:00",
+        "price_band_krw": "mid-high"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "lodging_naha_kokusai",
+      "type": "Lodging",
+      "title": "국제거리 스테이",
+      "x": 2380,
+      "y": 1120,
+      "properties": {
+        "place_ref": "city_naha",
+        "lodging_type": "city-hotel",
+        "checkin_window": "15:00~24:00",
+        "checkout_time": "11:00",
+        "price_band_krw": "mid"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "lodging_beppu_onsen",
+      "type": "Lodging",
+      "title": "벳푸 온천 료칸",
+      "x": 2380,
+      "y": 1210,
+      "properties": {
+        "place_ref": "city_beppu",
+        "lodging_type": "ryokan",
+        "checkin_window": "15:00~19:00",
+        "checkout_time": "10:00",
+        "price_band_krw": "mid-high"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "lodging_hakodate_bay",
+      "type": "Lodging",
+      "title": "하코다테 베이 호텔",
+      "x": 2380,
+      "y": 1300,
+      "properties": {
+        "place_ref": "city_hakodate",
+        "lodging_type": "city-hotel",
+        "checkin_window": "15:00~23:00",
+        "checkout_time": "11:00",
+        "price_band_krw": "mid"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "event_nagoya_matsuri",
+      "type": "SeasonalEvent",
+      "title": "나고야 마츠리",
+      "x": 2640,
+      "y": 900,
+      "properties": {
+        "place_ref": "city_nagoya",
+        "season": "autumn",
+        "start_month": 10,
+        "end_month": 10,
+        "event_type": "festival"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "event_kobe_luminarie",
+      "type": "SeasonalEvent",
+      "title": "고베 루미나리에",
+      "x": 2640,
+      "y": 990,
+      "properties": {
+        "place_ref": "city_kobe",
+        "season": "winter",
+        "start_month": 12,
+        "end_month": 12,
+        "event_type": "illumination"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "event_naha_hari",
+      "type": "SeasonalEvent",
+      "title": "나하 하리",
+      "x": 2640,
+      "y": 1080,
+      "properties": {
+        "place_ref": "city_naha",
+        "season": "spring",
+        "start_month": 5,
+        "end_month": 5,
+        "event_type": "boat-race"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "event_beppu_hatto",
+      "type": "SeasonalEvent",
+      "title": "벳푸 핫토 온천 축제",
+      "x": 2640,
+      "y": 1170,
+      "properties": {
+        "place_ref": "city_beppu",
+        "season": "spring",
+        "start_month": 4,
+        "end_month": 4,
+        "event_type": "onsen-festival"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "event_hakodate_illumination",
+      "type": "SeasonalEvent",
+      "title": "하코다테 일루미네이션",
+      "x": 2640,
+      "y": 1260,
+      "properties": {
+        "place_ref": "city_hakodate",
+        "season": "winter",
+        "start_month": 12,
+        "end_month": 2,
+        "event_type": "illumination"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "pass_kansai_thru",
+      "type": "PassProduct",
+      "title": "간사이 스루 패스",
+      "x": 2640,
+      "y": 1350,
+      "properties": {
+        "coverage_area": "Kansai",
+        "price_krw": 42000,
+        "eligibility": "일반 여행객"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "pass_okinawa_yui",
+      "type": "PassProduct",
+      "title": "오키나와 유이레일 1일권",
+      "x": 2640,
+      "y": 1440,
+      "properties": {
+        "coverage_area": "Naha",
+        "price_krw": 8000,
+        "eligibility": "일반 여행객"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_icn_ngo",
+      "type": "TransportOption",
+      "title": "ICN -> NGO 직항",
+      "x": 2920,
+      "y": 760,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_icn",
+        "to_ref": "hub_ngo",
+        "city_ref": "city_nagoya",
+        "route_scope": "international",
+        "booking_hint": "중부권 단기여행 기본편"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_ngo_icn",
+      "type": "TransportOption",
+      "title": "NGO -> ICN 직항",
+      "x": 2920,
+      "y": 830,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_ngo",
+        "to_ref": "hub_icn",
+        "city_ref": "city_nagoya",
+        "route_scope": "international",
+        "booking_hint": "귀국 제한형 일정에서 안정적"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_icn_oka",
+      "type": "TransportOption",
+      "title": "ICN -> OKA 직항",
+      "x": 2920,
+      "y": 900,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_icn",
+        "to_ref": "hub_oka",
+        "city_ref": "city_naha",
+        "route_scope": "international",
+        "booking_hint": "휴양형 일정 대안"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_oka_icn",
+      "type": "TransportOption",
+      "title": "OKA -> ICN 직항",
+      "x": 2920,
+      "y": 970,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_oka",
+        "to_ref": "hub_icn",
+        "city_ref": "city_naha",
+        "route_scope": "international",
+        "booking_hint": "복귀편은 대체로 낮 시간대가 많음"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_icn_oit",
+      "type": "TransportOption",
+      "title": "ICN -> OIT 직항",
+      "x": 2920,
+      "y": 1040,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_icn",
+        "to_ref": "hub_oit",
+        "city_ref": "city_beppu",
+        "route_scope": "international",
+        "booking_hint": "온천 중심 제약에 맞는 규슈 대안"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_oit_icn",
+      "type": "TransportOption",
+      "title": "OIT -> ICN 직항",
+      "x": 2920,
+      "y": 1110,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_oit",
+        "to_ref": "hub_icn",
+        "city_ref": "city_beppu",
+        "route_scope": "international",
+        "booking_hint": "온천 일정 후 조용한 복귀용"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_icn_hkd",
+      "type": "TransportOption",
+      "title": "ICN -> HKD 직항",
+      "x": 2920,
+      "y": 1180,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_icn",
+        "to_ref": "hub_hkd",
+        "city_ref": "city_hakodate",
+        "route_scope": "international",
+        "booking_hint": "삿포로 대신 하코다테 직행 대안"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_hkd_icn",
+      "type": "TransportOption",
+      "title": "HKD -> ICN 직항",
+      "x": 2920,
+      "y": 1250,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_hkd",
+        "to_ref": "hub_icn",
+        "city_ref": "city_hakodate",
+        "route_scope": "international",
+        "booking_hint": "항만 야경 일정 뒤 귀국용"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_pus_fuk",
+      "type": "TransportOption",
+      "title": "PUS -> FUK 직항",
+      "x": 2920,
+      "y": 1320,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_pus",
+        "to_ref": "hub_fuk",
+        "city_ref": "city_fukuoka",
+        "route_scope": "international",
+        "booking_hint": "부산권 출발 단기여행 기본편"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_fuk_pus",
+      "type": "TransportOption",
+      "title": "FUK -> PUS 직항",
+      "x": 2920,
+      "y": 1390,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_fuk",
+        "to_ref": "hub_pus",
+        "city_ref": "city_fukuoka",
+        "route_scope": "international",
+        "booking_hint": "부산 복귀 단기 일정용"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_pus_kix",
+      "type": "TransportOption",
+      "title": "PUS -> KIX 직항",
+      "x": 2920,
+      "y": 1460,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_pus",
+        "to_ref": "hub_kix",
+        "city_ref": "city_osaka",
+        "route_scope": "international",
+        "booking_hint": "부산 출발 간사이권 대안"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "transport_kix_pus",
+      "type": "TransportOption",
+      "title": "KIX -> PUS 직항",
+      "x": 2920,
+      "y": 1530,
+      "properties": {
+        "mode": "flight",
+        "from_ref": "hub_kix",
+        "to_ref": "hub_pus",
+        "city_ref": "city_osaka",
+        "route_scope": "international",
+        "booking_hint": "간사이권에서 부산 복귀용"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_icn_ngo_20260322",
+      "type": "Observation",
+      "title": "ICN-NGO 3/22 견적",
+      "x": 3180,
+      "y": 760,
+      "properties": {
+        "subject_ref": "transport_icn_ngo",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 184000,
+          "depart_at": "2026-03-22T18:35:00+09:00",
+          "arrive_at": "2026-03-22T20:20:00+09:00",
+          "duration_minutes": 105,
+          "label": "KE741"
+        },
+        "observed_at": "2026-03-12T11:05:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_ngo_icn_20260324",
+      "type": "Observation",
+      "title": "NGO-ICN 3/24 견적",
+      "x": 3180,
+      "y": 830,
+      "properties": {
+        "subject_ref": "transport_ngo_icn",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 177000,
+          "depart_at": "2026-03-24T14:10:00+09:00",
+          "arrive_at": "2026-03-24T16:15:00+09:00",
+          "duration_minutes": 125,
+          "label": "7C1604"
+        },
+        "observed_at": "2026-03-12T11:07:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_icn_oka_20260322",
+      "type": "Observation",
+      "title": "ICN-OKA 3/22 견적",
+      "x": 3180,
+      "y": 900,
+      "properties": {
+        "subject_ref": "transport_icn_oka",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 238000,
+          "depart_at": "2026-03-22T18:20:00+09:00",
+          "arrive_at": "2026-03-22T20:40:00+09:00",
+          "duration_minutes": 140,
+          "label": "LJ241"
+        },
+        "observed_at": "2026-03-12T11:10:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_oka_icn_20260324",
+      "type": "Observation",
+      "title": "OKA-ICN 3/24 견적",
+      "x": 3180,
+      "y": 970,
+      "properties": {
+        "subject_ref": "transport_oka_icn",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 226000,
+          "depart_at": "2026-03-24T13:35:00+09:00",
+          "arrive_at": "2026-03-24T16:05:00+09:00",
+          "duration_minutes": 150,
+          "label": "TW242"
+        },
+        "observed_at": "2026-03-12T11:12:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_icn_oit_20260322",
+      "type": "Observation",
+      "title": "ICN-OIT 3/22 견적",
+      "x": 3180,
+      "y": 1040,
+      "properties": {
+        "subject_ref": "transport_icn_oit",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 214000,
+          "depart_at": "2026-03-22T18:10:00+09:00",
+          "arrive_at": "2026-03-22T20:00:00+09:00",
+          "duration_minutes": 110,
+          "label": "ZE521"
+        },
+        "observed_at": "2026-03-12T11:15:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_oit_icn_20260324",
+      "type": "Observation",
+      "title": "OIT-ICN 3/24 견적",
+      "x": 3180,
+      "y": 1110,
+      "properties": {
+        "subject_ref": "transport_oit_icn",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 205000,
+          "depart_at": "2026-03-24T15:05:00+09:00",
+          "arrive_at": "2026-03-24T17:05:00+09:00",
+          "duration_minutes": 120,
+          "label": "RS522"
+        },
+        "observed_at": "2026-03-12T11:17:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_icn_hkd_20260322",
+      "type": "Observation",
+      "title": "ICN-HKD 3/22 견적",
+      "x": 3180,
+      "y": 1180,
+      "properties": {
+        "subject_ref": "transport_icn_hkd",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 256000,
+          "depart_at": "2026-03-22T18:55:00+09:00",
+          "arrive_at": "2026-03-22T21:30:00+09:00",
+          "duration_minutes": 155,
+          "label": "BX901"
+        },
+        "observed_at": "2026-03-12T11:20:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_hkd_icn_20260324",
+      "type": "Observation",
+      "title": "HKD-ICN 3/24 견적",
+      "x": 3180,
+      "y": 1250,
+      "properties": {
+        "subject_ref": "transport_hkd_icn",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 248000,
+          "depart_at": "2026-03-24T14:20:00+09:00",
+          "arrive_at": "2026-03-24T17:05:00+09:00",
+          "duration_minutes": 165,
+          "label": "BX902"
+        },
+        "observed_at": "2026-03-12T11:22:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_pus_fuk_20260322",
+      "type": "Observation",
+      "title": "PUS-FUK 3/22 견적",
+      "x": 3180,
+      "y": 1320,
+      "properties": {
+        "subject_ref": "transport_pus_fuk",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 131000,
+          "depart_at": "2026-03-22T19:10:00+09:00",
+          "arrive_at": "2026-03-22T20:10:00+09:00",
+          "duration_minutes": 60,
+          "label": "BX142"
+        },
+        "observed_at": "2026-03-12T11:25:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_fuk_pus_20260324",
+      "type": "Observation",
+      "title": "FUK-PUS 3/24 견적",
+      "x": 3180,
+      "y": 1390,
+      "properties": {
+        "subject_ref": "transport_fuk_pus",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 128000,
+          "depart_at": "2026-03-24T16:50:00+09:00",
+          "arrive_at": "2026-03-24T17:55:00+09:00",
+          "duration_minutes": 65,
+          "label": "7C1452"
+        },
+        "observed_at": "2026-03-12T11:27:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_pus_kix_20260322",
+      "type": "Observation",
+      "title": "PUS-KIX 3/22 견적",
+      "x": 3180,
+      "y": 1460,
+      "properties": {
+        "subject_ref": "transport_pus_kix",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 142000,
+          "depart_at": "2026-03-22T18:45:00+09:00",
+          "arrive_at": "2026-03-22T20:20:00+09:00",
+          "duration_minutes": 95,
+          "label": "LJ231"
+        },
+        "observed_at": "2026-03-12T11:30:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_tx_kix_pus_20260324",
+      "type": "Observation",
+      "title": "KIX-PUS 3/24 견적",
+      "x": 3180,
+      "y": 1530,
+      "properties": {
+        "subject_ref": "transport_kix_pus",
+        "metric": "fare_quote",
+        "value": {
+          "price_krw": 139000,
+          "depart_at": "2026-03-24T15:40:00+09:00",
+          "arrive_at": "2026-03-24T17:10:00+09:00",
+          "duration_minutes": 90,
+          "label": "LJ232"
+        },
+        "observed_at": "2026-03-12T11:32:00+09:00",
+        "source_ref": "source_skyscanner",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_stay_kyoto_20260323",
+      "type": "Observation",
+      "title": "교토 숙소 3/23 견적",
+      "x": 3440,
+      "y": 760,
+      "properties": {
+        "subject_ref": "lodging_kyoto_station",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 152000,
+          "rating": 8.5,
+          "checkin_window": "15:00~24:00"
+        },
+        "observed_at": "2026-03-12T11:35:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_stay_yokohama_20260323",
+      "type": "Observation",
+      "title": "요코하마 숙소 3/23 견적",
+      "x": 3440,
+      "y": 830,
+      "properties": {
+        "subject_ref": "lodging_yokohama_minato",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 167000,
+          "rating": 8.7,
+          "checkin_window": "15:00~24:00"
+        },
+        "observed_at": "2026-03-12T11:37:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_stay_nagoya_20260323",
+      "type": "Observation",
+      "title": "나고야 숙소 3/23 견적",
+      "x": 3440,
+      "y": 900,
+      "properties": {
+        "subject_ref": "lodging_nagoya_sakae",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 126000,
+          "rating": 8.6,
+          "checkin_window": "15:00~24:00"
+        },
+        "observed_at": "2026-03-12T11:40:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_stay_kobe_20260323",
+      "type": "Observation",
+      "title": "고베 숙소 3/23 견적",
+      "x": 3440,
+      "y": 970,
+      "properties": {
+        "subject_ref": "lodging_kobe_sannomiya",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 149000,
+          "rating": 8.5,
+          "checkin_window": "15:00~23:30"
+        },
+        "observed_at": "2026-03-12T11:42:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_stay_naha_20260323",
+      "type": "Observation",
+      "title": "나하 숙소 3/23 견적",
+      "x": 3440,
+      "y": 1040,
+      "properties": {
+        "subject_ref": "lodging_naha_kokusai",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 138000,
+          "rating": 8.4,
+          "checkin_window": "15:00~24:00"
+        },
+        "observed_at": "2026-03-12T11:45:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_stay_beppu_20260323",
+      "type": "Observation",
+      "title": "벳푸 숙소 3/23 견적",
+      "x": 3440,
+      "y": 1110,
+      "properties": {
+        "subject_ref": "lodging_beppu_onsen",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 161000,
+          "rating": 8.8,
+          "checkin_window": "15:00~19:00"
+        },
+        "observed_at": "2026-03-12T11:47:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "obs_stay_hakodate_20260323",
+      "type": "Observation",
+      "title": "하코다테 숙소 3/23 견적",
+      "x": 3440,
+      "y": 1180,
+      "properties": {
+        "subject_ref": "lodging_hakodate_bay",
+        "metric": "price_quote",
+        "value": {
+          "price_krw": 158000,
+          "rating": 8.6,
+          "checkin_window": "15:00~23:00"
+        },
+        "observed_at": "2026-03-12T11:50:00+09:00",
+        "source_ref": "source_hotels",
+        "currency": "KRW"
+      },
+      "aliases": [],
+      "tags": [],
+      "notes": "",
+      "confidence": 0.82,
+      "ext": {}
+    },
+    {
+      "id": "region_chubu",
+      "type": "Region",
+      "title": "주부",
+      "x": 320,
+      "y": 540,
+      "aliases": [
+        "Chubu"
+      ],
+      "tags": [
+        "중부"
+      ],
+      "properties": {
+        "country_code": "JP",
+        "canonical_name": "Chubu",
+        "region_kind": "central",
+        "best_for": "성,미식,중부허브"
+      },
+      "notes": "나고야 중심의 일본 중부 권역.",
+      "confidence": 0.82,
+      "ext": {}
     }
   ],
   "edges": [
@@ -425,199 +3187,1951 @@
       "id": "e1",
       "from": "country_japan",
       "to": "region_kanto",
-      "label": "HAS_REGION"
+      "label": "CONTAINS"
     },
     {
       "id": "e2",
       "from": "country_japan",
       "to": "region_kansai",
-      "label": "HAS_REGION"
+      "label": "CONTAINS"
     },
     {
       "id": "e3",
       "from": "country_japan",
       "to": "region_kyushu",
-      "label": "HAS_REGION"
+      "label": "CONTAINS"
     },
     {
       "id": "e4",
       "from": "country_japan",
       "to": "region_hokkaido",
-      "label": "HAS_REGION"
+      "label": "CONTAINS"
     },
     {
       "id": "e5",
-      "from": "country_japan",
-      "to": "region_okinawa",
-      "label": "HAS_REGION"
+      "from": "region_kanto",
+      "to": "prefecture_tokyo",
+      "label": "CONTAINS"
     },
     {
       "id": "e6",
-      "from": "region_kanto",
-      "to": "city_tokyo",
-      "label": "HAS_CITY"
+      "from": "region_kansai",
+      "to": "prefecture_osaka",
+      "label": "CONTAINS"
     },
     {
       "id": "e7",
       "from": "region_kansai",
-      "to": "city_osaka",
-      "label": "HAS_CITY"
+      "to": "prefecture_kyoto",
+      "label": "CONTAINS"
     },
     {
       "id": "e8",
-      "from": "region_kansai",
-      "to": "city_kyoto",
-      "label": "HAS_CITY"
+      "from": "region_kyushu",
+      "to": "prefecture_fukuoka",
+      "label": "CONTAINS"
     },
     {
       "id": "e9",
-      "from": "region_kyushu",
-      "to": "city_fukuoka",
-      "label": "HAS_CITY"
+      "from": "region_hokkaido",
+      "to": "prefecture_hokkaido",
+      "label": "CONTAINS"
     },
     {
       "id": "e10",
-      "from": "region_hokkaido",
-      "to": "city_sapporo",
-      "label": "HAS_CITY"
+      "from": "region_kyushu",
+      "to": "prefecture_nagasaki",
+      "label": "CONTAINS"
     },
     {
       "id": "e11",
-      "from": "region_okinawa",
-      "to": "city_naha",
-      "label": "HAS_CITY"
+      "from": "prefecture_tokyo",
+      "to": "city_tokyo",
+      "label": "CONTAINS"
     },
     {
       "id": "e12",
-      "from": "city_tokyo",
-      "to": "district_shinjuku",
-      "label": "HAS_DISTRICT"
+      "from": "prefecture_osaka",
+      "to": "city_osaka",
+      "label": "CONTAINS"
     },
     {
       "id": "e13",
-      "from": "city_osaka",
-      "to": "district_dotonbori",
-      "label": "HAS_DISTRICT"
+      "from": "prefecture_kyoto",
+      "to": "city_kyoto",
+      "label": "CONTAINS"
     },
     {
       "id": "e14",
-      "from": "city_kyoto",
-      "to": "district_gion",
-      "label": "HAS_DISTRICT"
+      "from": "prefecture_fukuoka",
+      "to": "city_fukuoka",
+      "label": "CONTAINS"
     },
     {
       "id": "e15",
-      "from": "city_fukuoka",
-      "to": "district_tenjin",
-      "label": "HAS_DISTRICT"
+      "from": "prefecture_hokkaido",
+      "to": "city_sapporo",
+      "label": "CONTAINS"
     },
     {
       "id": "e16",
-      "from": "country_japan",
-      "to": "culture_onsen",
-      "label": "HAS_CULTURE"
+      "from": "prefecture_nagasaki",
+      "to": "city_tsushima",
+      "label": "CONTAINS"
     },
     {
       "id": "e17",
-      "from": "country_japan",
-      "to": "culture_omotenashi",
-      "label": "HAS_CULTURE"
+      "from": "city_tokyo",
+      "to": "district_shinjuku",
+      "label": "CONTAINS"
     },
     {
       "id": "e18",
-      "from": "city_kyoto",
-      "to": "festival_gion",
-      "label": "HOSTS_FESTIVAL"
+      "from": "city_osaka",
+      "to": "district_namba",
+      "label": "CONTAINS"
     },
     {
       "id": "e19",
-      "from": "city_fukuoka",
-      "to": "festival_dontaku",
-      "label": "HOSTS_FESTIVAL"
+      "from": "city_kyoto",
+      "to": "district_gion",
+      "label": "CONTAINS"
     },
     {
       "id": "e20",
-      "from": "city_sapporo",
-      "to": "festival_snow",
-      "label": "HOSTS_FESTIVAL"
+      "from": "city_fukuoka",
+      "to": "district_tenjin",
+      "label": "CONTAINS"
     },
     {
       "id": "e21",
-      "from": "country_japan",
-      "to": "cuisine_ramen",
-      "label": "HAS_CUISINE"
+      "from": "district_shinjuku",
+      "to": "city_tokyo",
+      "label": "LOCATED_IN"
     },
     {
       "id": "e22",
-      "from": "country_japan",
-      "to": "cuisine_sushi",
-      "label": "HAS_CUISINE"
+      "from": "district_namba",
+      "to": "city_osaka",
+      "label": "LOCATED_IN"
     },
     {
       "id": "e23",
-      "from": "district_tenjin",
-      "to": "rest_ichiran",
-      "label": "HAS_RESTAURANT"
+      "from": "district_gion",
+      "to": "city_kyoto",
+      "label": "LOCATED_IN"
     },
     {
       "id": "e24",
-      "from": "city_fukuoka",
-      "to": "rest_mizutaki",
-      "label": "HAS_RESTAURANT"
+      "from": "district_tenjin",
+      "to": "city_fukuoka",
+      "label": "LOCATED_IN"
     },
     {
       "id": "e25",
-      "from": "district_dotonbori",
-      "to": "rest_dotonbori_kukuru",
-      "label": "HAS_RESTAURANT"
+      "from": "city_tokyo",
+      "to": "hub_hnd",
+      "label": "HAS_TRANSIT_HUB"
     },
     {
       "id": "e26",
-      "from": "cuisine_ramen",
-      "to": "rest_ichiran",
-      "label": "SERVES"
+      "from": "city_osaka",
+      "to": "hub_kix",
+      "label": "HAS_TRANSIT_HUB"
     },
     {
       "id": "e27",
-      "from": "city_kyoto",
-      "to": "spot_fushimi",
-      "label": "HAS_ATTRACTION"
+      "from": "city_fukuoka",
+      "to": "hub_fuk",
+      "label": "HAS_TRANSIT_HUB"
     },
     {
       "id": "e28",
-      "from": "city_tokyo",
-      "to": "transit_nrt",
+      "from": "city_sapporo",
+      "to": "hub_cts",
       "label": "HAS_TRANSIT_HUB"
     },
     {
       "id": "e29",
-      "from": "city_osaka",
-      "to": "transit_kix",
+      "from": "city_tsushima",
+      "to": "hub_hit",
       "label": "HAS_TRANSIT_HUB"
     },
     {
       "id": "e30",
-      "from": "city_fukuoka",
-      "to": "transit_fuk",
-      "label": "HAS_TRANSIT_HUB"
+      "from": "city_kyoto",
+      "to": "hub_kix",
+      "label": "NEAR"
     },
     {
       "id": "e31",
-      "from": "tip_railpass",
-      "to": "region_kansai",
-      "label": "APPLIES_TO"
+      "from": "city_tokyo",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
     },
     {
       "id": "e32",
-      "from": "tip_railpass",
-      "to": "region_kanto",
-      "label": "APPLIES_TO"
+      "from": "city_tokyo",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
     },
     {
       "id": "e33",
+      "from": "city_osaka",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e34",
+      "from": "city_osaka",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e35",
+      "from": "city_osaka",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e36",
+      "from": "city_kyoto",
+      "to": "theme_history",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e37",
+      "from": "city_fukuoka",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e38",
+      "from": "city_fukuoka",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e39",
+      "from": "city_sapporo",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e40",
+      "from": "city_sapporo",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e41",
+      "from": "city_tsushima",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e42",
+      "from": "city_tokyo",
+      "to": "attraction_teamlab",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e43",
+      "from": "city_kyoto",
+      "to": "attraction_fushimi",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e44",
+      "from": "city_fukuoka",
+      "to": "attraction_ohori",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e45",
+      "from": "city_sapporo",
+      "to": "attraction_odori",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e46",
+      "from": "city_tokyo",
+      "to": "restaurant_sushidai",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e47",
+      "from": "city_osaka",
+      "to": "restaurant_kukuru",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e48",
+      "from": "city_fukuoka",
+      "to": "restaurant_ichiran",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e49",
+      "from": "city_sapporo",
+      "to": "restaurant_soupcurry",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e50",
+      "from": "city_tokyo",
+      "to": "lodging_tokyo_ueno",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e51",
+      "from": "city_osaka",
+      "to": "lodging_osaka_namba",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e52",
+      "from": "city_fukuoka",
+      "to": "lodging_fukuoka_hakata",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e53",
+      "from": "city_sapporo",
+      "to": "lodging_sapporo_odori",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e54",
+      "from": "city_tsushima",
+      "to": "lodging_tsushima_hitakatsu",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e55",
+      "from": "city_kyoto",
+      "to": "event_gion",
+      "label": "HAS_EVENT"
+    },
+    {
+      "id": "e56",
+      "from": "city_sapporo",
+      "to": "event_snow",
+      "label": "HAS_EVENT"
+    },
+    {
+      "id": "e57",
+      "from": "city_fukuoka",
+      "to": "event_dontaku",
+      "label": "HAS_EVENT"
+    },
+    {
+      "id": "e58",
+      "from": "attraction_teamlab",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e59",
+      "from": "attraction_fushimi",
+      "to": "theme_history",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e60",
+      "from": "attraction_ohori",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e61",
+      "from": "attraction_odori",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e62",
+      "from": "restaurant_sushidai",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e63",
+      "from": "restaurant_kukuru",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e64",
+      "from": "restaurant_kukuru",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e65",
+      "from": "restaurant_ichiran",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e66",
+      "from": "restaurant_soupcurry",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e67",
+      "from": "lodging_tokyo_ueno",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e68",
+      "from": "lodging_osaka_namba",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e69",
+      "from": "lodging_fukuoka_hakata",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e70",
+      "from": "lodging_sapporo_odori",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e71",
+      "from": "event_gion",
+      "to": "theme_history",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e72",
+      "from": "event_snow",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e73",
+      "from": "event_dontaku",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e74",
+      "from": "theme_onsen",
+      "to": "rule_onsen_manners",
+      "label": "SUBJECT_TO_RULE"
+    },
+    {
+      "id": "e75",
       "from": "country_japan",
-      "to": "ref_jnto",
+      "to": "rule_airport_buffer",
+      "label": "SUBJECT_TO_RULE"
+    },
+    {
+      "id": "e76",
+      "from": "pass_kyushu",
+      "to": "region_kyushu",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e77",
+      "from": "pass_tokyo_subway",
+      "to": "city_tokyo",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e78",
+      "from": "hub_icn",
+      "to": "transport_icn_fuk",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e79",
+      "from": "transport_icn_fuk",
+      "to": "hub_fuk",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e80",
+      "from": "hub_fuk",
+      "to": "transport_fuk_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e81",
+      "from": "transport_fuk_icn",
+      "to": "hub_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e82",
+      "from": "hub_icn",
+      "to": "transport_icn_kix",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e83",
+      "from": "transport_icn_kix",
+      "to": "hub_kix",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e84",
+      "from": "hub_kix",
+      "to": "transport_kix_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e85",
+      "from": "transport_kix_icn",
+      "to": "hub_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e86",
+      "from": "hub_icn",
+      "to": "transport_icn_hnd",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e87",
+      "from": "transport_icn_hnd",
+      "to": "hub_hnd",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e88",
+      "from": "hub_hnd",
+      "to": "transport_hnd_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e89",
+      "from": "transport_hnd_icn",
+      "to": "hub_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e90",
+      "from": "hub_icn",
+      "to": "transport_icn_cts",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e91",
+      "from": "transport_icn_cts",
+      "to": "hub_cts",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e92",
+      "from": "hub_cts",
+      "to": "transport_cts_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e93",
+      "from": "transport_cts_icn",
+      "to": "hub_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e94",
+      "from": "hub_pus",
+      "to": "transport_pus_hit",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e95",
+      "from": "transport_pus_hit",
+      "to": "hub_hit",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e96",
+      "from": "hub_hit",
+      "to": "transport_hit_pus",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e97",
+      "from": "transport_hit_pus",
+      "to": "hub_pus",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e98",
+      "from": "transport_icn_fuk",
+      "to": "obs_tx_icn_fuk_20260322",
       "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e99",
+      "from": "transport_fuk_icn",
+      "to": "obs_tx_fuk_icn_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e100",
+      "from": "transport_icn_kix",
+      "to": "obs_tx_icn_kix_20260322",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e101",
+      "from": "transport_kix_icn",
+      "to": "obs_tx_kix_icn_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e102",
+      "from": "transport_icn_hnd",
+      "to": "obs_tx_icn_hnd_20260322",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e103",
+      "from": "transport_hnd_icn",
+      "to": "obs_tx_hnd_icn_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e104",
+      "from": "transport_icn_cts",
+      "to": "obs_tx_icn_cts_20260322",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e105",
+      "from": "transport_cts_icn",
+      "to": "obs_tx_cts_icn_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e106",
+      "from": "transport_pus_hit",
+      "to": "obs_tx_pus_hit_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e107",
+      "from": "transport_hit_pus",
+      "to": "obs_tx_hit_pus_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e108",
+      "from": "lodging_tokyo_ueno",
+      "to": "obs_stay_tokyo_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e109",
+      "from": "lodging_osaka_namba",
+      "to": "obs_stay_osaka_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e110",
+      "from": "lodging_fukuoka_hakata",
+      "to": "obs_stay_fukuoka_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e111",
+      "from": "lodging_sapporo_odori",
+      "to": "obs_stay_sapporo_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e112",
+      "from": "lodging_tsushima_hitakatsu",
+      "to": "obs_stay_tsushima_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e113",
+      "from": "obs_tx_icn_fuk_20260322",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e114",
+      "from": "obs_tx_fuk_icn_20260324",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e115",
+      "from": "obs_tx_icn_kix_20260322",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e116",
+      "from": "obs_tx_kix_icn_20260324",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e117",
+      "from": "obs_tx_icn_hnd_20260322",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e118",
+      "from": "obs_tx_hnd_icn_20260324",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e119",
+      "from": "obs_tx_icn_cts_20260322",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e120",
+      "from": "obs_tx_cts_icn_20260324",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e121",
+      "from": "obs_tx_pus_hit_20260323",
+      "to": "source_user_note",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e122",
+      "from": "obs_tx_hit_pus_20260324",
+      "to": "source_user_note",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e123",
+      "from": "obs_stay_tokyo_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e124",
+      "from": "obs_stay_osaka_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e125",
+      "from": "obs_stay_fukuoka_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e126",
+      "from": "obs_stay_sapporo_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e127",
+      "from": "obs_stay_tsushima_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e128",
+      "from": "country_japan",
+      "to": "source_jnto",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e129",
+      "from": "session_japan_shorttrip",
+      "to": "constraint_origin_icn",
+      "label": "HAS_CONSTRAINT"
+    },
+    {
+      "id": "e130",
+      "from": "session_japan_shorttrip",
+      "to": "constraint_depart_after_20260322_1800",
+      "label": "HAS_CONSTRAINT"
+    },
+    {
+      "id": "e131",
+      "from": "session_japan_shorttrip",
+      "to": "constraint_return_before_20260324_1900",
+      "label": "HAS_CONSTRAINT"
+    },
+    {
+      "id": "e132",
+      "from": "session_japan_shorttrip",
+      "to": "constraint_budget_700000",
+      "label": "HAS_CONSTRAINT"
+    },
+    {
+      "id": "e133",
+      "from": "session_japan_shorttrip",
+      "to": "pref_food",
+      "label": "HAS_PREFERENCE"
+    },
+    {
+      "id": "e134",
+      "from": "session_japan_shorttrip",
+      "to": "pref_shopping",
+      "label": "HAS_PREFERENCE"
+    },
+    {
+      "id": "e135",
+      "from": "session_japan_shorttrip",
+      "to": "sample_candidate_fukuoka",
+      "label": "GENERATED_PLAN"
+    },
+    {
+      "id": "e136",
+      "from": "session_japan_shorttrip",
+      "to": "sample_candidate_tsushima",
+      "label": "GENERATED_PLAN"
+    },
+    {
+      "id": "e137",
+      "from": "session_japan_shorttrip",
+      "to": "sample_candidate_osaka",
+      "label": "GENERATED_PLAN"
+    },
+    {
+      "id": "e138",
+      "from": "sample_candidate_fukuoka",
+      "to": "transport_icn_fuk",
+      "label": "CHOOSES_TRANSPORT"
+    },
+    {
+      "id": "e139",
+      "from": "sample_candidate_fukuoka",
+      "to": "transport_fuk_icn",
+      "label": "CHOOSES_TRANSPORT"
+    },
+    {
+      "id": "e140",
+      "from": "sample_candidate_fukuoka",
+      "to": "lodging_fukuoka_hakata",
+      "label": "CHOOSES_STAY"
+    },
+    {
+      "id": "e141",
+      "from": "sample_candidate_fukuoka",
+      "to": "restaurant_ichiran",
+      "label": "CHOOSES_ACTIVITY"
+    },
+    {
+      "id": "e142",
+      "from": "sample_candidate_fukuoka",
+      "to": "attraction_ohori",
+      "label": "CHOOSES_ACTIVITY"
+    },
+    {
+      "id": "e143",
+      "from": "sample_candidate_fukuoka",
+      "to": "constraint_budget_700000",
+      "label": "SATISFIES"
+    },
+    {
+      "id": "e144",
+      "from": "sample_candidate_fukuoka",
+      "to": "constraint_return_before_20260324_1900",
+      "label": "SATISFIES"
+    },
+    {
+      "id": "e145",
+      "from": "sample_candidate_osaka",
+      "to": "transport_icn_kix",
+      "label": "CHOOSES_TRANSPORT"
+    },
+    {
+      "id": "e146",
+      "from": "sample_candidate_osaka",
+      "to": "transport_kix_icn",
+      "label": "CHOOSES_TRANSPORT"
+    },
+    {
+      "id": "e147",
+      "from": "sample_candidate_osaka",
+      "to": "lodging_osaka_namba",
+      "label": "CHOOSES_STAY"
+    },
+    {
+      "id": "e148",
+      "from": "sample_candidate_osaka",
+      "to": "restaurant_kukuru",
+      "label": "CHOOSES_ACTIVITY"
+    },
+    {
+      "id": "e149",
+      "from": "sample_candidate_osaka",
+      "to": "constraint_budget_700000",
+      "label": "SATISFIES"
+    },
+    {
+      "id": "e150",
+      "from": "sample_candidate_osaka",
+      "to": "sample_candidate_fukuoka",
+      "label": "ALTERNATIVE_TO"
+    },
+    {
+      "id": "e151",
+      "from": "sample_candidate_tsushima",
+      "to": "transport_pus_hit",
+      "label": "CHOOSES_TRANSPORT"
+    },
+    {
+      "id": "e152",
+      "from": "sample_candidate_tsushima",
+      "to": "transport_hit_pus",
+      "label": "CHOOSES_TRANSPORT"
+    },
+    {
+      "id": "e153",
+      "from": "sample_candidate_tsushima",
+      "to": "lodging_tsushima_hitakatsu",
+      "label": "CHOOSES_STAY"
+    },
+    {
+      "id": "e154",
+      "from": "sample_candidate_tsushima",
+      "to": "constraint_origin_icn",
+      "label": "CONFLICTS_WITH"
+    },
+    {
+      "id": "e155",
+      "from": "sample_candidate_tsushima",
+      "to": "sample_candidate_fukuoka",
+      "label": "ALTERNATIVE_TO"
+    },
+    {
+      "id": "e1000",
+      "from": "region_kanto",
+      "to": "prefecture_kanagawa",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1001",
+      "from": "region_kansai",
+      "to": "prefecture_hyogo",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1003",
+      "from": "country_japan",
+      "to": "prefecture_okinawa",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1004",
+      "from": "region_kyushu",
+      "to": "prefecture_oita",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1005",
+      "from": "prefecture_kanagawa",
+      "to": "city_yokohama",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1006",
+      "from": "prefecture_aichi",
+      "to": "city_nagoya",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1007",
+      "from": "prefecture_hyogo",
+      "to": "city_kobe",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1008",
+      "from": "prefecture_okinawa",
+      "to": "city_naha",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1009",
+      "from": "prefecture_oita",
+      "to": "city_beppu",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1010",
+      "from": "prefecture_hokkaido",
+      "to": "city_hakodate",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1011",
+      "from": "city_yokohama",
+      "to": "district_minatomirai",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1012",
+      "from": "city_nagoya",
+      "to": "district_sakae",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1013",
+      "from": "city_kobe",
+      "to": "district_sannomiya",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1014",
+      "from": "city_naha",
+      "to": "district_kokusai",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1015",
+      "from": "city_beppu",
+      "to": "district_kannawa",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1016",
+      "from": "city_hakodate",
+      "to": "district_motomachi",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e1017",
+      "from": "district_minatomirai",
+      "to": "city_yokohama",
+      "label": "LOCATED_IN"
+    },
+    {
+      "id": "e1018",
+      "from": "district_sakae",
+      "to": "city_nagoya",
+      "label": "LOCATED_IN"
+    },
+    {
+      "id": "e1019",
+      "from": "district_sannomiya",
+      "to": "city_kobe",
+      "label": "LOCATED_IN"
+    },
+    {
+      "id": "e1020",
+      "from": "district_kokusai",
+      "to": "city_naha",
+      "label": "LOCATED_IN"
+    },
+    {
+      "id": "e1021",
+      "from": "district_kannawa",
+      "to": "city_beppu",
+      "label": "LOCATED_IN"
+    },
+    {
+      "id": "e1022",
+      "from": "district_motomachi",
+      "to": "city_hakodate",
+      "label": "LOCATED_IN"
+    },
+    {
+      "id": "e1023",
+      "from": "city_nagoya",
+      "to": "hub_ngo",
+      "label": "HAS_TRANSIT_HUB"
+    },
+    {
+      "id": "e1024",
+      "from": "city_naha",
+      "to": "hub_oka",
+      "label": "HAS_TRANSIT_HUB"
+    },
+    {
+      "id": "e1025",
+      "from": "city_beppu",
+      "to": "hub_oit",
+      "label": "HAS_TRANSIT_HUB"
+    },
+    {
+      "id": "e1026",
+      "from": "city_hakodate",
+      "to": "hub_hkd",
+      "label": "HAS_TRANSIT_HUB"
+    },
+    {
+      "id": "e1027",
+      "from": "city_yokohama",
+      "to": "hub_hnd",
+      "label": "NEAR"
+    },
+    {
+      "id": "e1028",
+      "from": "city_kobe",
+      "to": "hub_kix",
+      "label": "NEAR"
+    },
+    {
+      "id": "e1029",
+      "from": "city_beppu",
+      "to": "hub_fuk",
+      "label": "NEAR"
+    },
+    {
+      "id": "e1030",
+      "from": "city_yokohama",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1031",
+      "from": "city_yokohama",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1032",
+      "from": "city_nagoya",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1033",
+      "from": "city_nagoya",
+      "to": "theme_history",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1034",
+      "from": "city_kobe",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1035",
+      "from": "city_kobe",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1036",
+      "from": "city_naha",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1037",
+      "from": "city_naha",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1038",
+      "from": "city_beppu",
+      "to": "theme_onsen",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1039",
+      "from": "city_beppu",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1040",
+      "from": "city_hakodate",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1041",
+      "from": "city_hakodate",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1042",
+      "from": "city_kyoto",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1043",
+      "from": "city_tokyo",
+      "to": "attraction_sensoji",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e1044",
+      "from": "city_kyoto",
+      "to": "attraction_kiyomizu",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e1045",
+      "from": "city_yokohama",
+      "to": "attraction_minatomirai",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e1046",
+      "from": "city_nagoya",
+      "to": "attraction_nagoya_castle",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e1047",
+      "from": "city_kobe",
+      "to": "attraction_harborland",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e1048",
+      "from": "city_naha",
+      "to": "attraction_shurijo",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e1049",
+      "from": "city_beppu",
+      "to": "attraction_beppu_hells",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e1050",
+      "from": "city_hakodate",
+      "to": "attraction_hakodate_mountain",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e1051",
+      "from": "city_fukuoka",
+      "to": "attraction_canal_city",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e1052",
+      "from": "city_osaka",
+      "to": "attraction_dotonbori_walk",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e1053",
+      "from": "city_kyoto",
+      "to": "restaurant_nishiki",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e1054",
+      "from": "city_yokohama",
+      "to": "restaurant_yokohama_chinatown",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e1055",
+      "from": "city_nagoya",
+      "to": "restaurant_yabaton",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e1056",
+      "from": "city_kobe",
+      "to": "restaurant_mouriya",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e1057",
+      "from": "city_naha",
+      "to": "restaurant_jacks",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e1058",
+      "from": "city_beppu",
+      "to": "restaurant_jigoku",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e1059",
+      "from": "city_hakodate",
+      "to": "restaurant_lucky_pierrot",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e1060",
+      "from": "city_kyoto",
+      "to": "lodging_kyoto_station",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e1061",
+      "from": "city_yokohama",
+      "to": "lodging_yokohama_minato",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e1062",
+      "from": "city_nagoya",
+      "to": "lodging_nagoya_sakae",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e1063",
+      "from": "city_kobe",
+      "to": "lodging_kobe_sannomiya",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e1064",
+      "from": "city_naha",
+      "to": "lodging_naha_kokusai",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e1065",
+      "from": "city_beppu",
+      "to": "lodging_beppu_onsen",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e1066",
+      "from": "city_hakodate",
+      "to": "lodging_hakodate_bay",
+      "label": "HAS_LODGING"
+    },
+    {
+      "id": "e1067",
+      "from": "city_nagoya",
+      "to": "event_nagoya_matsuri",
+      "label": "HAS_EVENT"
+    },
+    {
+      "id": "e1068",
+      "from": "city_kobe",
+      "to": "event_kobe_luminarie",
+      "label": "HAS_EVENT"
+    },
+    {
+      "id": "e1069",
+      "from": "city_naha",
+      "to": "event_naha_hari",
+      "label": "HAS_EVENT"
+    },
+    {
+      "id": "e1070",
+      "from": "city_beppu",
+      "to": "event_beppu_hatto",
+      "label": "HAS_EVENT"
+    },
+    {
+      "id": "e1071",
+      "from": "city_hakodate",
+      "to": "event_hakodate_illumination",
+      "label": "HAS_EVENT"
+    },
+    {
+      "id": "e1072",
+      "from": "attraction_sensoji",
+      "to": "theme_history",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1073",
+      "from": "attraction_kiyomizu",
+      "to": "theme_history",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1074",
+      "from": "attraction_minatomirai",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1075",
+      "from": "attraction_minatomirai",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1076",
+      "from": "attraction_nagoya_castle",
+      "to": "theme_history",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1077",
+      "from": "attraction_harborland",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1078",
+      "from": "attraction_shurijo",
+      "to": "theme_history",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1079",
+      "from": "attraction_shurijo",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1080",
+      "from": "attraction_beppu_hells",
+      "to": "theme_onsen",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1081",
+      "from": "attraction_beppu_hells",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1082",
+      "from": "attraction_hakodate_mountain",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1083",
+      "from": "attraction_canal_city",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1084",
+      "from": "attraction_dotonbori_walk",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1085",
+      "from": "restaurant_nishiki",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1086",
+      "from": "restaurant_yokohama_chinatown",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1087",
+      "from": "restaurant_yabaton",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1088",
+      "from": "restaurant_mouriya",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1089",
+      "from": "restaurant_jacks",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1090",
+      "from": "restaurant_jigoku",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1091",
+      "from": "restaurant_jigoku",
+      "to": "theme_onsen",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1092",
+      "from": "restaurant_lucky_pierrot",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1093",
+      "from": "lodging_kyoto_station",
+      "to": "theme_history",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1094",
+      "from": "lodging_yokohama_minato",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1095",
+      "from": "lodging_nagoya_sakae",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1096",
+      "from": "lodging_kobe_sannomiya",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1097",
+      "from": "lodging_naha_kokusai",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1098",
+      "from": "lodging_beppu_onsen",
+      "to": "theme_onsen",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1099",
+      "from": "lodging_hakodate_bay",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1100",
+      "from": "event_nagoya_matsuri",
+      "to": "theme_history",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1101",
+      "from": "event_kobe_luminarie",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1102",
+      "from": "event_naha_hari",
+      "to": "theme_nature",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1103",
+      "from": "event_beppu_hatto",
+      "to": "theme_onsen",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1104",
+      "from": "event_hakodate_illumination",
+      "to": "theme_nightlife",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e1105",
+      "from": "country_japan",
+      "to": "pass_kansai_thru",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1106",
+      "from": "city_naha",
+      "to": "pass_okinawa_yui",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1107",
+      "from": "hub_icn",
+      "to": "transport_icn_ngo",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1108",
+      "from": "transport_icn_ngo",
+      "to": "hub_ngo",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1109",
+      "from": "hub_ngo",
+      "to": "transport_ngo_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1110",
+      "from": "transport_ngo_icn",
+      "to": "hub_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1111",
+      "from": "hub_icn",
+      "to": "transport_icn_oka",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1112",
+      "from": "transport_icn_oka",
+      "to": "hub_oka",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1113",
+      "from": "hub_oka",
+      "to": "transport_oka_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1114",
+      "from": "transport_oka_icn",
+      "to": "hub_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1115",
+      "from": "hub_icn",
+      "to": "transport_icn_oit",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1116",
+      "from": "transport_icn_oit",
+      "to": "hub_oit",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1117",
+      "from": "hub_oit",
+      "to": "transport_oit_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1118",
+      "from": "transport_oit_icn",
+      "to": "hub_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1119",
+      "from": "hub_icn",
+      "to": "transport_icn_hkd",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1120",
+      "from": "transport_icn_hkd",
+      "to": "hub_hkd",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1121",
+      "from": "hub_hkd",
+      "to": "transport_hkd_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1122",
+      "from": "transport_hkd_icn",
+      "to": "hub_icn",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1123",
+      "from": "hub_pus",
+      "to": "transport_pus_fuk",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1124",
+      "from": "transport_pus_fuk",
+      "to": "hub_fuk",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1125",
+      "from": "hub_fuk",
+      "to": "transport_fuk_pus",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1126",
+      "from": "transport_fuk_pus",
+      "to": "hub_pus",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1127",
+      "from": "hub_pus",
+      "to": "transport_pus_kix",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1128",
+      "from": "transport_pus_kix",
+      "to": "hub_kix",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1129",
+      "from": "hub_kix",
+      "to": "transport_kix_pus",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1130",
+      "from": "transport_kix_pus",
+      "to": "hub_pus",
+      "label": "CONNECTED_TO"
+    },
+    {
+      "id": "e1131",
+      "from": "transport_icn_ngo",
+      "to": "obs_tx_icn_ngo_20260322",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1132",
+      "from": "transport_ngo_icn",
+      "to": "obs_tx_ngo_icn_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1133",
+      "from": "transport_icn_oka",
+      "to": "obs_tx_icn_oka_20260322",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1134",
+      "from": "transport_oka_icn",
+      "to": "obs_tx_oka_icn_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1135",
+      "from": "transport_icn_oit",
+      "to": "obs_tx_icn_oit_20260322",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1136",
+      "from": "transport_oit_icn",
+      "to": "obs_tx_oit_icn_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1137",
+      "from": "transport_icn_hkd",
+      "to": "obs_tx_icn_hkd_20260322",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1138",
+      "from": "transport_hkd_icn",
+      "to": "obs_tx_hkd_icn_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1139",
+      "from": "transport_pus_fuk",
+      "to": "obs_tx_pus_fuk_20260322",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1140",
+      "from": "transport_fuk_pus",
+      "to": "obs_tx_fuk_pus_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1141",
+      "from": "transport_pus_kix",
+      "to": "obs_tx_pus_kix_20260322",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1142",
+      "from": "transport_kix_pus",
+      "to": "obs_tx_kix_pus_20260324",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1143",
+      "from": "lodging_kyoto_station",
+      "to": "obs_stay_kyoto_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1144",
+      "from": "lodging_yokohama_minato",
+      "to": "obs_stay_yokohama_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1145",
+      "from": "lodging_nagoya_sakae",
+      "to": "obs_stay_nagoya_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1146",
+      "from": "lodging_kobe_sannomiya",
+      "to": "obs_stay_kobe_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1147",
+      "from": "lodging_naha_kokusai",
+      "to": "obs_stay_naha_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1148",
+      "from": "lodging_beppu_onsen",
+      "to": "obs_stay_beppu_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1149",
+      "from": "lodging_hakodate_bay",
+      "to": "obs_stay_hakodate_20260323",
+      "label": "SUPPORTED_BY"
+    },
+    {
+      "id": "e1150",
+      "from": "obs_tx_icn_ngo_20260322",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1151",
+      "from": "obs_tx_ngo_icn_20260324",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1152",
+      "from": "obs_tx_icn_oka_20260322",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1153",
+      "from": "obs_tx_oka_icn_20260324",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1154",
+      "from": "obs_tx_icn_oit_20260322",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1155",
+      "from": "obs_tx_oit_icn_20260324",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1156",
+      "from": "obs_tx_icn_hkd_20260322",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1157",
+      "from": "obs_tx_hkd_icn_20260324",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1158",
+      "from": "obs_tx_pus_fuk_20260322",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1159",
+      "from": "obs_tx_fuk_pus_20260324",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1160",
+      "from": "obs_tx_pus_kix_20260322",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1161",
+      "from": "obs_tx_kix_pus_20260324",
+      "to": "source_skyscanner",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1162",
+      "from": "obs_stay_kyoto_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1163",
+      "from": "obs_stay_yokohama_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1164",
+      "from": "obs_stay_nagoya_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1165",
+      "from": "obs_stay_kobe_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1166",
+      "from": "obs_stay_naha_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1167",
+      "from": "obs_stay_beppu_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e1168",
+      "from": "obs_stay_hakodate_20260323",
+      "to": "source_hotels",
+      "label": "OBSERVED_FROM"
+    },
+    {
+      "id": "e2000",
+      "from": "country_japan",
+      "to": "region_chubu",
+      "label": "CONTAINS"
+    },
+    {
+      "id": "e2001",
+      "from": "region_chubu",
+      "to": "prefecture_aichi",
+      "label": "CONTAINS"
     }
   ]
 }

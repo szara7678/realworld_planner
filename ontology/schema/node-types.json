@@ -1,18 +1,349 @@
 {
-  "version": "1.0",
-  "description": "Generic travel ontology node types",
+  "version": "2.0",
+  "description": "Constraint-driven travel graph node schema",
+  "common_fields": [
+    "id",
+    "type",
+    "title",
+    "aliases",
+    "tags",
+    "status",
+    "notes",
+    "created_at",
+    "updated_at",
+    "confidence",
+    "ext"
+  ],
+  "promotion_policy": {
+    "ext_field": "ext",
+    "promotion_threshold": 3,
+    "description": "Unknown properties land in ext first and get promoted after repeated use."
+  },
   "node_types": {
-    "Country": ["iso2", "capital", "currency", "language"],
-    "Region": ["region_level", "local_admin_type", "contains"],
-    "City": ["prefecture", "city_class", "best_season"],
-    "District": ["admin_unit", "nightlife", "shopping", "food_spot"],
-    "Culture": ["keyword", "etiquette", "travel_impact"],
-    "Festival": ["month", "city", "festival_type"],
-    "Cuisine": ["style", "budget_per_meal_jpy"],
-    "Restaurant": ["city", "category", "price_range", "near_station", "signature"],
-    "Attraction": ["city", "theme", "best_time"],
-    "TransitHub": ["hub_type", "city", "international"],
-    "TravelTip": ["question_type", "rule"],
-    "Reference": ["url", "source_type"]
-  }
+    "Country": {
+      "layer": "Knowledge",
+      "required": [
+        "country_code",
+        "canonical_name"
+      ],
+      "properties": [
+        "country_code",
+        "canonical_name",
+        "currency",
+        "language",
+        "visa_policy",
+        "best_seasons"
+      ]
+    },
+    "Region": {
+      "layer": "Knowledge",
+      "required": [
+        "country_code",
+        "canonical_name"
+      ],
+      "properties": [
+        "country_code",
+        "canonical_name",
+        "region_kind",
+        "best_for"
+      ]
+    },
+    "Prefecture": {
+      "layer": "Knowledge",
+      "required": [
+        "country_code",
+        "canonical_name"
+      ],
+      "properties": [
+        "country_code",
+        "canonical_name",
+        "prefecture_code",
+        "capital_city"
+      ]
+    },
+    "City": {
+      "layer": "Knowledge",
+      "required": [
+        "country_code",
+        "canonical_name"
+      ],
+      "properties": [
+        "country_code",
+        "canonical_name",
+        "prefecture_ref",
+        "city_class",
+        "best_season",
+        "typical_budget_krw"
+      ]
+    },
+    "District": {
+      "layer": "Knowledge",
+      "required": [
+        "country_code",
+        "canonical_name"
+      ],
+      "properties": [
+        "country_code",
+        "canonical_name",
+        "city_ref",
+        "district_kind",
+        "vibe"
+      ]
+    },
+    "TransitHub": {
+      "layer": "Knowledge",
+      "required": [
+        "country_code",
+        "canonical_name"
+      ],
+      "properties": [
+        "country_code",
+        "canonical_name",
+        "hub_code",
+        "hub_type",
+        "city_ref",
+        "international"
+      ]
+    },
+    "Attraction": {
+      "layer": "Knowledge",
+      "required": [
+        "place_ref"
+      ],
+      "properties": [
+        "place_ref",
+        "category",
+        "best_time",
+        "typical_duration_hours",
+        "typical_budget_krw"
+      ]
+    },
+    "Restaurant": {
+      "layer": "Knowledge",
+      "required": [
+        "place_ref"
+      ],
+      "properties": [
+        "place_ref",
+        "category",
+        "signature",
+        "meal_budget_krw",
+        "near_hub_ref"
+      ]
+    },
+    "Cuisine": {
+      "layer": "Knowledge",
+      "required": [],
+      "properties": [
+        "style",
+        "meal_budget_krw"
+      ]
+    },
+    "Lodging": {
+      "layer": "Knowledge",
+      "required": [
+        "place_ref"
+      ],
+      "properties": [
+        "place_ref",
+        "lodging_type",
+        "checkin_window",
+        "checkout_time",
+        "price_band_krw"
+      ]
+    },
+    "SeasonalEvent": {
+      "layer": "Knowledge",
+      "required": [],
+      "properties": [
+        "place_ref",
+        "season",
+        "start_month",
+        "end_month",
+        "event_type"
+      ]
+    },
+    "ExperienceTheme": {
+      "layer": "Knowledge",
+      "required": [],
+      "properties": [
+        "theme_code",
+        "question_examples"
+      ]
+    },
+    "TravelRule": {
+      "layer": "Knowledge",
+      "required": [],
+      "properties": [
+        "rule_kind",
+        "scope_ref",
+        "impact"
+      ]
+    },
+    "PassProduct": {
+      "layer": "Knowledge",
+      "required": [],
+      "properties": [
+        "coverage_area",
+        "price_krw",
+        "eligibility"
+      ]
+    },
+    "PlannerSession": {
+      "layer": "Planning",
+      "required": [],
+      "properties": [
+        "status",
+        "current_stage",
+        "origin_ref",
+        "session_scope"
+      ]
+    },
+    "Constraint": {
+      "layer": "Planning",
+      "required": [
+        "constraint_kind",
+        "operator",
+        "value"
+      ],
+      "properties": [
+        "constraint_kind",
+        "operator",
+        "value",
+        "normalized_value"
+      ]
+    },
+    "Preference": {
+      "layer": "Planning",
+      "required": [],
+      "properties": [
+        "preference_kind",
+        "value",
+        "weight"
+      ]
+    },
+    "CandidatePlan": {
+      "layer": "Planning",
+      "required": [
+        "session_ref",
+        "status",
+        "score"
+      ],
+      "properties": [
+        "session_ref",
+        "status",
+        "score",
+        "city_ref",
+        "estimated_total_krw",
+        "conflict_summary"
+      ]
+    },
+    "PlanDay": {
+      "layer": "Planning",
+      "required": [],
+      "properties": [
+        "session_ref",
+        "day_index",
+        "focus_theme"
+      ]
+    },
+    "TransportOption": {
+      "layer": "Planning",
+      "required": [
+        "mode",
+        "from_ref",
+        "to_ref"
+      ],
+      "properties": [
+        "mode",
+        "from_ref",
+        "to_ref",
+        "city_ref",
+        "route_scope",
+        "booking_hint"
+      ]
+    },
+    "StayOption": {
+      "layer": "Planning",
+      "required": [
+        "place_ref"
+      ],
+      "properties": [
+        "place_ref",
+        "night_count",
+        "lodging_ref",
+        "budget_level"
+      ]
+    },
+    "ActivityOption": {
+      "layer": "Planning",
+      "required": [
+        "place_ref"
+      ],
+      "properties": [
+        "place_ref",
+        "activity_ref",
+        "time_slot",
+        "typical_budget_krw"
+      ]
+    },
+    "BudgetSummary": {
+      "layer": "Planning",
+      "required": [],
+      "properties": [
+        "session_ref",
+        "transport_total_krw",
+        "stay_total_krw",
+        "activity_total_krw",
+        "grand_total_krw"
+      ]
+    },
+    "Source": {
+      "layer": "Evidence",
+      "required": [],
+      "properties": [
+        "source_type",
+        "url",
+        "publisher"
+      ]
+    },
+    "Observation": {
+      "layer": "Evidence",
+      "required": [
+        "subject_ref",
+        "metric",
+        "value",
+        "observed_at",
+        "source_ref"
+      ],
+      "properties": [
+        "subject_ref",
+        "metric",
+        "value",
+        "observed_at",
+        "source_ref",
+        "currency"
+      ]
+    }
+  },
+  "constraint_types": [
+    "origin",
+    "depart_after",
+    "return_depart_before",
+    "total_budget_max",
+    "nights_min",
+    "nights_max",
+    "must_use_airport",
+    "must_avoid_area"
+  ],
+  "preference_types": [
+    "themes",
+    "pace",
+    "food_budget_level",
+    "shopping_level",
+    "nature_level",
+    "onsen_level",
+    "nightlife_level",
+    "transport_tolerance"
+  ]
 }

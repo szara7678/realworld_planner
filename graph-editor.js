@@ -1,29 +1,48 @@
 (function () {
-  const STORAGE_KEY = "vacation-graph-workspace-v3";
+  const STORAGE_KEY = "realworld-planner-v2";
+  const PLANNER_SESSION_KEY = "realworld-planner-session-v2";
   const API_GRAPH = new URL("./api/graph", window.location.href).toString();
+  const API_SCHEMA = new URL("./api/schema", window.location.href).toString();
   const API_SEARCH = new URL("./api/search", window.location.href).toString();
+  const API_PLAN_SESSION = new URL("./api/plan/session", window.location.href).toString();
+  const API_PLAN_STEP = new URL("./api/plan/step", window.location.href).toString();
   const STATIC_GRAPH = new URL("./graph-state.json", window.location.href).toString();
   const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+  const DEFAULT_SCHEMA = window.GRAPH_SCHEMA || { node_types: {}, edge_types: [], constraint_types: [], preference_types: [] };
 
   const COLORS = {
     Country: { bg: "#f9e4b7", fg: "#8c5100" },
     Region: { bg: "#ffd7ba", fg: "#9a3412" },
+    Prefecture: { bg: "#ffedd5", fg: "#9a3412" },
     City: { bg: "#bfe6dd", fg: "#0f766e" },
     District: { bg: "#d8f3dc", fg: "#166534" },
-    Culture: { bg: "#d3ddff", fg: "#3949ab" },
-    Festival: { bg: "#f4d7ea", fg: "#a21caf" },
+    Lodging: { bg: "#fde6c8", fg: "#b45309" },
+    SeasonalEvent: { bg: "#f4d7ea", fg: "#a21caf" },
+    ExperienceTheme: { bg: "#d3ddff", fg: "#3949ab" },
+    TravelRule: { bg: "#dcfce7", fg: "#166534" },
+    PassProduct: { bg: "#ece2d2", fg: "#5b4632" },
     Cuisine: { bg: "#ffe4c7", fg: "#c2410c" },
     Restaurant: { bg: "#ffd8a8", fg: "#9a3412" },
     Attraction: { bg: "#c7d2fe", fg: "#3730a3" },
     TransitHub: { bg: "#cde7ff", fg: "#1d4ed8" },
-    TravelTip: { bg: "#dcfce7", fg: "#166534" },
-    Reference: { bg: "#ded8cf", fg: "#5f5345" },
+    PlannerSession: { bg: "#ede9fe", fg: "#5b21b6" },
+    Constraint: { bg: "#fee2e2", fg: "#b91c1c" },
+    Preference: { bg: "#fae8ff", fg: "#86198f" },
+    CandidatePlan: { bg: "#fef3c7", fg: "#92400e" },
+    PlanDay: { bg: "#e0f2fe", fg: "#075985" },
+    TransportOption: { bg: "#cde7ff", fg: "#1d4ed8" },
+    StayOption: { bg: "#fde6c8", fg: "#b45309" },
+    ActivityOption: { bg: "#c7d2fe", fg: "#3730a3" },
+    BudgetSummary: { bg: "#d1fae5", fg: "#065f46" },
+    Source: { bg: "#ded8cf", fg: "#5f5345" },
+    Observation: { bg: "#f3f4f6", fg: "#374151" },
     Default: { bg: "#ece2d2", fg: "#5b4632" },
   };
 
   const state = {
     graph: null,
     seed: null,
+    schema: DEFAULT_SCHEMA,
     selected: null,
     highlightedNodeIds: new Set(),
     highlightedEdgeIds: new Set(),
@@ -34,6 +53,8 @@
     chats: [],
     lastMatches: [],
     lastMatchedEdges: [],
+    plannerSessionId: "",
+    plannerSession: null,
     stickChatToBottom: true,
     detailDraft: null,
     detailOriginal: null,
@@ -91,17 +112,31 @@
   async function boot() {
     bindEvents();
     bindViewport();
+    state.schema = await loadSchema();
+    populateTypeOptions();
     state.graph = await loadGraph();
     state.seed = structuredClone(state.graph);
+    state.plannerSession = loadLocalPlannerSession();
+    state.plannerSessionId = state.plannerSession?.id || "";
     fitGraphToView();
     render();
+  }
+
+  async function loadSchema() {
+    try {
+      const response = await fetch(API_SCHEMA, { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return await response.json();
+    } catch {
+      return DEFAULT_SCHEMA;
+    }
   }
 
   async function loadGraph() {
     try {
       const response = await fetch(API_GRAPH, { cache: "no-store" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const graph = await response.json();
+      const graph = hydrateGraph(await response.json());
       state.runtime.serverAvailable = true;
       state.runtime.source = "server";
       localStorage.setItem(STORAGE_KEY, JSON.stringify(graph));
@@ -110,7 +145,7 @@
       try {
         const response = await fetch(STATIC_GRAPH, { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const graph = await response.json();
+        const graph = hydrateGraph(await response.json());
         state.runtime.serverAvailable = false;
         state.runtime.source = "static";
         localStorage.setItem(STORAGE_KEY, JSON.stringify(graph));
@@ -119,12 +154,52 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           state.runtime.source = "local";
-          return JSON.parse(raw);
+          return hydrateGraph(JSON.parse(raw));
         }
         state.runtime.source = "seed";
-        return structuredClone(window.GRAPH_SEED);
+        return hydrateGraph(structuredClone(window.GRAPH_SEED));
       }
     }
+  }
+
+  function populateTypeOptions() {
+    const nodeTypes = Object.keys(state.schema?.node_types || {});
+    const values = nodeTypes.length ? nodeTypes : ["Country", "City", "TransitHub", "ExperienceTheme", "TransportOption", "Observation"];
+    el.fieldType.innerHTML = "";
+    values.forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      el.fieldType.appendChild(option);
+    });
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "Default";
+    defaultOption.textContent = "Default";
+    el.fieldType.appendChild(defaultOption);
+  }
+
+  function loadLocalPlannerSession() {
+    const raw = localStorage.getItem(PLANNER_SESSION_KEY);
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+
+  function saveLocalPlannerSession() {
+    if (!state.plannerSession) {
+      localStorage.removeItem(PLANNER_SESSION_KEY);
+      return;
+    }
+    localStorage.setItem(PLANNER_SESSION_KEY, JSON.stringify(state.plannerSession));
+  }
+
+  function clearLocalPlannerSession() {
+    state.plannerSession = null;
+    state.plannerSessionId = "";
+    localStorage.removeItem(PLANNER_SESSION_KEY);
   }
 
   function bindEvents() {
@@ -326,7 +401,8 @@
       local: "local",
       seed: "seed",
     }[state.runtime.source] || state.runtime.source;
-    el.updatedStamp.textContent = `최근 저장: ${formatDate(stamp)} · ${sourceLabel}`;
+    const plannerLabel = state.plannerSessionId ? ` · planner ${state.plannerSessionId.slice(-6)}` : "";
+    el.updatedStamp.textContent = `최근 저장: ${formatDate(stamp)} · ${sourceLabel}${plannerLabel}`;
   }
 
   function renderNodes() {
@@ -441,32 +517,55 @@
     renderChats();
     el.searchQuery.value = "";
 
-    const placeholder = { role: "assistant", text: "검색 중...", createdAt: new Date().toISOString(), matches: [] };
+    const usePlanner = shouldUsePlanner(query);
+    const placeholder = {
+      role: "assistant",
+      text: usePlanner ? "플랜 후보 계산 중..." : "검색 중...",
+      createdAt: new Date().toISOString(),
+      matches: [],
+    };
     state.chats.push(placeholder);
     renderChats();
 
     try {
       let result;
       try {
-        const response = await fetch(API_SEARCH, {
+        const endpoint = usePlanner ? API_PLAN_STEP : API_SEARCH;
+        const body = usePlanner
+          ? JSON.stringify({
+              query,
+              session_id: state.plannerSessionId,
+            })
+          : JSON.stringify({
+              query,
+              model: el.searchModel.value.trim(),
+              apiKey: el.searchApiKey.value.trim(),
+            });
+        const response = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            query,
-            model: el.searchModel.value.trim(),
-            apiKey: el.searchApiKey.value.trim(),
-          }),
+          body,
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         result = await response.json();
         state.runtime.serverAvailable = true;
       } catch {
-        result = await runStaticSearch(query);
+        result = usePlanner ? await runStaticPlanner(query) : await runStaticSearch(query);
         state.runtime.serverAvailable = false;
       }
-      placeholder.text = result.answer || "답변 없음";
+      placeholder.text = composeAssistantText(result);
+      placeholder.stage = result.stage || "";
+      placeholder.nextQuestion = result.next_question || "";
       placeholder.matches = result.matches || [];
       placeholder.matchedEdges = result.matched_edges || [];
+      placeholder.recommendations = result.recommendations || [];
+      if (result.session?.id) {
+        state.plannerSessionId = result.session.id;
+        state.plannerSession = result.session;
+        saveLocalPlannerSession();
+      } else if (!usePlanner) {
+        clearLocalPlannerSession();
+      }
       state.lastMatches = placeholder.matches;
       state.lastMatchedEdges = placeholder.matchedEdges;
       applySearchHighlight(placeholder.matches, placeholder.matchedEdges);
@@ -477,6 +576,20 @@
       applySearchHighlight([], []);
     }
     renderChats();
+  }
+
+  function shouldUsePlanner(query) {
+    if (state.plannerSessionId) return true;
+    const lower = query.toLowerCase();
+    return (
+      /(\d+\s*번|\d{1,2}[/-]\d{1,2}|예산|경비|출발|귀국|복귀|플랜|일정|추천|온천|쇼핑|미식|1박|2박)/.test(lower)
+    );
+  }
+
+  function composeAssistantText(result) {
+    const base = result.answer || "답변 없음";
+    if (!result.next_question) return base;
+    return `${base}\n\n다음 입력: ${result.next_question}`;
   }
 
   function openAnswerModal(chatIndex) {
@@ -592,7 +705,7 @@
       const keyInput = document.createElement("input");
       keyInput.value = key;
       const valueInput = document.createElement("input");
-      valueInput.value = String(value);
+      valueInput.value = typeof value === "object" && value !== null ? JSON.stringify(value) : String(value);
       const removeBtn = document.createElement("button");
       removeBtn.type = "button";
       removeBtn.className = "icon-btn";
@@ -671,16 +784,22 @@
   }
 
   function addNode() {
+    const defaultType = Object.keys(state.schema?.node_types || {})[0] || "City";
     state.selected = { kind: "node", id: createId("node") };
     state.detailIsNew = true;
     state.detailOriginal = null;
     state.detailDraft = {
       id: state.selected.id,
-      type: "City",
+      type: defaultType,
       title: "새 노드",
       x: 360 + state.graph.nodes.length * 12,
       y: 220 + state.graph.nodes.length * 12,
-      properties: { status: "draft" },
+      aliases: [],
+      tags: [],
+      status: "draft",
+      confidence: 0.5,
+      ext: {},
+      properties: {},
       notes: "새로 추가된 노드",
     };
     render();
@@ -743,6 +862,7 @@
   function saveLocal() {
     state.graph.meta = state.graph.meta || {};
     state.graph.meta.updatedAt = new Date().toISOString();
+    state.graph = hydrateGraph(state.graph);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state.graph));
   }
 
@@ -764,7 +884,8 @@
       try {
         const graph = JSON.parse(String(reader.result));
         if (!Array.isArray(graph.nodes) || !Array.isArray(graph.edges)) throw new Error("invalid");
-        state.graph = graph;
+        state.graph = hydrateGraph(graph);
+        clearLocalPlannerSession();
         saveLocal();
         fitGraphToView();
         render();
@@ -777,10 +898,11 @@
   }
 
   function resetGraph() {
-    state.graph = structuredClone(state.seed || window.GRAPH_SEED);
+    state.graph = hydrateGraph(structuredClone(state.seed || window.GRAPH_SEED));
     state.selected = null;
     state.highlightedNodeIds = new Set();
     state.highlightedEdgeIds = new Set();
+    clearLocalPlannerSession();
     saveLocal();
     fitGraphToView();
     render();
@@ -834,13 +956,14 @@
     const node = getDetailDraft();
     if (!node) return;
     const targetKey = key.trim() || fallbackKey;
+    const parsedValue = parsePropertyInput(value);
     node.properties = node.properties || {};
     if (targetKey !== fallbackKey && Object.prototype.hasOwnProperty.call(node.properties, fallbackKey)) {
       const oldValue = node.properties[fallbackKey];
       delete node.properties[fallbackKey];
-      node.properties[targetKey] = value || oldValue;
+      node.properties[targetKey] = value ? parsedValue : oldValue;
     } else {
-      node.properties[targetKey] = value;
+      node.properties[targetKey] = parsedValue;
     }
     renderDetailSummary();
   }
@@ -1027,6 +1150,107 @@
     };
   }
 
+  async function runStaticPlanner(query) {
+    const session = state.plannerSession || window.StaticPlanner?.createSession?.(state.plannerSessionId) || null;
+    if (!window.StaticPlanner || !session) {
+      const matches = searchGraphLocal(state.graph, query);
+      const matchedEdges = relatedEdgesLocal(state.graph, matches);
+      return {
+        answer:
+          "정적 플래너 모듈을 불러오지 못했다.\n\n" +
+          `${buildLocalAnswer(matches, matchedEdges)}`,
+        stage: "static",
+        session: null,
+        matches,
+        matched_edges: matchedEdges,
+        recommendations: [],
+        alternatives: [],
+        next_question: "페이지를 새로고침한 뒤 다시 시도해줘.",
+      };
+    }
+    const result = window.StaticPlanner.runPlanner(state.graph, session, query);
+    const matches = buildMatchesFromNodeIds(result.focusNodeIds || [], query);
+    const matchedEdges = relatedEdgesLocal(state.graph, matches);
+    return {
+      answer: result.answer,
+      stage: result.stage,
+      session: result.session,
+      matches,
+      matched_edges: matchedEdges,
+      recommendations: result.recommendations || [],
+      alternatives: result.alternatives || [],
+      next_question: result.next_question || "",
+    };
+  }
+
+  function buildMatchesFromNodeIds(nodeIds, fallbackQuery) {
+    const uniqueIds = Array.from(new Set(nodeIds || []));
+    const directMatches = uniqueIds
+      .map((id) => getNode(id))
+      .filter(Boolean)
+      .slice(0, 10)
+      .map((node) => ({
+        kind: "node",
+        id: node.id,
+        title: node.title,
+        type: node.type,
+        notes: node.notes || "",
+        properties: node.properties || {},
+        latest_values: node.latest_values || {},
+        score: 999,
+      }));
+    return directMatches.length ? directMatches : searchGraphLocal(state.graph, fallbackQuery);
+  }
+
+  function hydrateGraph(graph) {
+    const cloned = structuredClone(graph);
+    const nodesById = new Map((cloned.nodes || []).map((node) => [node.id, node]));
+    (cloned.nodes || []).forEach((node) => {
+      node.aliases = Array.isArray(node.aliases) ? node.aliases : [];
+      node.tags = Array.isArray(node.tags) ? node.tags : [];
+      node.properties = node.properties || {};
+      node.ext = node.ext || {};
+      node.latest_values = node.latest_values || {};
+      node.evidence_summary = node.evidence_summary || {};
+      if (node.confidence == null) node.confidence = 0.75;
+      if (!node.status) node.status = "active";
+      if (!node.notes) node.notes = "";
+    });
+    const outgoing = new Map();
+    (cloned.edges || []).forEach((edge) => {
+      edge.notes = edge.notes || "";
+      if (edge.confidence == null) edge.confidence = 0.75;
+      if (!outgoing.has(edge.from)) outgoing.set(edge.from, []);
+      outgoing.get(edge.from).push(edge);
+    });
+    (cloned.nodes || [])
+      .filter((node) => node.type === "Observation")
+      .forEach((observation) => {
+        const subjectRef = String(observation.properties?.subject_ref || "");
+        const subject = nodesById.get(subjectRef);
+        if (!subject) return;
+        const value = observation.properties?.value || {};
+        const latestValues = subject.latest_values || {};
+        const observedAt = observation.properties?.observed_at || "";
+        Object.entries(value).forEach(([key, item]) => {
+          latestValues[key] = item;
+        });
+        if (!latestValues[observation.properties?.metric || "metric"]) {
+          latestValues[observation.properties?.metric || "metric"] = value;
+        }
+        subject.latest_values = latestValues;
+        const summary = subject.evidence_summary || {};
+        const count = Number(summary.observation_count || 0) + 1;
+        summary.observation_count = count;
+        summary.last_observed_at = [summary.last_observed_at || "", observedAt].sort().pop();
+        summary.trust_score = roundConfidence(((Number(summary.trust_score || 0) * (count - 1)) + Number(observation.confidence || 0.75)) / count);
+        const linkedSources = (outgoing.get(observation.id) || []).filter((edge) => edge.label === "OBSERVED_FROM");
+        summary.source_count = Math.max(Number(summary.source_count || 0), linkedSources.length);
+        subject.evidence_summary = summary;
+      });
+    return cloned;
+  }
+
   function searchGraphLocal(graph, query) {
     const terms = query
       .split(/\s+/)
@@ -1041,8 +1265,12 @@
         node.id || "",
         node.type || "",
         node.title || "",
+        (node.aliases || []).join(" "),
+        (node.tags || []).join(" "),
         node.notes || "",
         JSON.stringify(node.properties || {}),
+        JSON.stringify(node.latest_values || {}),
+        JSON.stringify(node.ext || {}),
       ]
         .join(" ")
         .toLowerCase();
@@ -1050,7 +1278,10 @@
       let score = terms.reduce((sum, term) => sum + countOccurrences(haystack, term), 0);
       if (terms.some((term) => title.includes(term))) score += 3;
       if (title && queryLower.includes(title)) score += 6;
-      if (["Country", "Region", "City", "Festival", "Restaurant", "Reference"].includes(node.type)) score += 1;
+      if (["City", "TransitHub", "ExperienceTheme", "TransportOption", "Attraction", "Restaurant", "Lodging", "Observation"].includes(node.type)) score += 1.5;
+      const trust = Number(node.evidence_summary?.trust_score || node.confidence || 0);
+      const freshness = countFreshness(node.evidence_summary?.last_observed_at);
+      score += trust * 1.6 + freshness;
       if (!score) return;
       results.push({
         kind: "node",
@@ -1059,11 +1290,12 @@
         type: node.type,
         notes: node.notes || "",
         properties: node.properties || {},
+        latest_values: node.latest_values || {},
         score,
       });
     });
     results.sort((a, b) => b.score - a.score);
-    return results.slice(0, 8);
+    return results.slice(0, 10);
   }
 
   function relatedEdgesLocal(graph, matches) {
@@ -1139,7 +1371,7 @@
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
         "HTTP-Referer": window.location.origin,
-        "X-Title": "Vacation Graph Workspace",
+        "X-Title": "Realworld Planner",
       },
       body: JSON.stringify(payload),
     });
@@ -1161,5 +1393,36 @@
       count += 1;
       index += needle.length;
     }
+  }
+
+  function countFreshness(value) {
+    if (!value) return 0;
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return 0;
+    const diffDays = (Date.now() - date.getTime()) / (1000 * 60 * 60 * 24);
+    if (diffDays <= 3) return 2.6;
+    if (diffDays <= 14) return 1.8;
+    if (diffDays <= 45) return 1.0;
+    return 0.2;
+  }
+
+  function roundConfidence(value) {
+    return Math.round(Number(value || 0) * 1000) / 1000;
+  }
+
+  function parsePropertyInput(value) {
+    const trimmed = String(value ?? "").trim();
+    if (!trimmed) return "";
+    if ((trimmed.startsWith("{") && trimmed.endsWith("}")) || (trimmed.startsWith("[") && trimmed.endsWith("]"))) {
+      try {
+        return JSON.parse(trimmed);
+      } catch {
+        return trimmed;
+      }
+    }
+    if (/^-?\d+(\.\d+)?$/.test(trimmed)) return Number(trimmed);
+    if (trimmed === "true") return true;
+    if (trimmed === "false") return false;
+    return trimmed;
   }
 })();

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Vacation Graph Workspace</title>
+    <title>Realworld Planner</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,7 +18,7 @@
         <div class="canvas-topbar">
           <div class="topbar-leading">
             <div class="topbar-title">
-              <strong>Travel knowledge graph</strong>
+              <strong>Constraint-driven travel graph</strong>
               <span id="updatedStamp"></span>
             </div>
           </div>
@@ -39,7 +39,7 @@
         </div>
 
         <div class="canvas-hint">
-          배경 드래그: 이동 · 휠: 줌 · 노드/엣지 탭: 상세 · 답변 클릭: 사용된 정보 모달
+          배경 드래그: 이동 · 휠: 줌 · 노드/엣지 탭: 상세 · 플래너 답변 클릭: 사용된 정보 모달
         </div>
 
         <section class="chat-shell">
@@ -53,7 +53,7 @@
           <form id="chatForm" class="chat-inputbar">
             <textarea
               id="searchQuery"
-              placeholder="예: 후쿠오카와 대마도 중 집 도착까지 총비용과 도착 시간을 비교해줘"
+              placeholder="예: 인천에서 3/22 18시 이후 출발, 일본에서 3/24 19시 이전 출발, 최대 예산 70만원, 미식+쇼핑 위주"
             ></textarea>
             <button id="searchBtn" class="chat-send" type="submit">질문</button>
           </form>
@@ -91,13 +91,13 @@
             <label>타입 팔레트</label>
             <div class="type-palette">
               <span class="palette-chip palette-country">Country</span>
-              <span class="palette-chip palette-region">Region</span>
+              <span class="palette-chip palette-region">Knowledge</span>
               <span class="palette-chip palette-city">City</span>
-              <span class="palette-chip palette-culture">Culture</span>
-              <span class="palette-chip palette-festival">Festival</span>
-              <span class="palette-chip palette-food">Restaurant</span>
-              <span class="palette-chip palette-transit">TransitHub</span>
-              <span class="palette-chip palette-evidence">Reference</span>
+              <span class="palette-chip palette-culture">Theme</span>
+              <span class="palette-chip palette-festival">Planning</span>
+              <span class="palette-chip palette-food">Stay</span>
+              <span class="palette-chip palette-transit">Transit</span>
+              <span class="palette-chip palette-evidence">Evidence</span>
             </div>
           </div>
         </div>
@@ -119,21 +119,7 @@
           </div>
           <div class="field">
             <label for="fieldType">타입</label>
-            <select id="fieldType">
-              <option value="Country">Country</option>
-              <option value="Region">Region</option>
-              <option value="City">City</option>
-              <option value="District">District</option>
-              <option value="Culture">Culture</option>
-              <option value="Festival">Festival</option>
-              <option value="Cuisine">Cuisine</option>
-              <option value="Restaurant">Restaurant</option>
-              <option value="Attraction">Attraction</option>
-              <option value="TransitHub">TransitHub</option>
-              <option value="TravelTip">TravelTip</option>
-              <option value="Reference">Reference</option>
-              <option value="Default">Default</option>
-            </select>
+            <select id="fieldType"></select>
           </div>
           <div class="field">
             <label for="fieldNotes">메모</label>
@@ -167,13 +153,14 @@
           <button class="close-btn" type="submit">✕</button>
         </div>
         <div class="modal-body">
-          <p class="detail-meta">답변 생성에 사용된 매칭 노드와 연결 엣지</p>
+          <p class="detail-meta">검색과 플래너 단계에서 사용된 매칭 노드와 연결 엣지</p>
           <div id="ontologyUsedModal" class="ontology-modal-list"></div>
         </div>
       </form>
     </dialog>
 
     <script src="./graph-data.js"></script>
+    <script src="./planner-static.js"></script>
     <script src="./graph-editor.js"></script>
   </body>
 </html>

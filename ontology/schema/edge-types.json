@@ -1,18 +1,110 @@
 {
-  "version": "1.0",
-  "description": "Default edge types for travel knowledge graph",
+  "version": "2.0",
+  "description": "Constraint-driven travel graph edge schema",
   "edge_types": [
-    "HAS_REGION",
-    "HAS_CITY",
-    "HAS_DISTRICT",
-    "HAS_CULTURE",
-    "HAS_CUISINE",
-    "HOSTS_FESTIVAL",
-    "HAS_RESTAURANT",
-    "HAS_ATTRACTION",
-    "HAS_TRANSIT_HUB",
-    "SERVES",
-    "APPLIES_TO",
-    "SUPPORTED_BY"
+    {
+      "label": "CONTAINS",
+      "group": "containment"
+    },
+    {
+      "label": "LOCATED_IN",
+      "group": "containment"
+    },
+    {
+      "label": "NEAR",
+      "group": "containment"
+    },
+    {
+      "label": "CONNECTED_TO",
+      "group": "containment"
+    },
+    {
+      "label": "HAS_ATTRACTION",
+      "group": "knowledge"
+    },
+    {
+      "label": "HAS_RESTAURANT",
+      "group": "knowledge"
+    },
+    {
+      "label": "HAS_LODGING",
+      "group": "knowledge"
+    },
+    {
+      "label": "HAS_EVENT",
+      "group": "knowledge"
+    },
+    {
+      "label": "HAS_TRANSIT_HUB",
+      "group": "knowledge"
+    },
+    {
+      "label": "MATCHES_THEME",
+      "group": "knowledge"
+    },
+    {
+      "label": "SUBJECT_TO_RULE",
+      "group": "knowledge"
+    },
+    {
+      "label": "HAS_CONSTRAINT",
+      "group": "planning"
+    },
+    {
+      "label": "HAS_PREFERENCE",
+      "group": "planning"
+    },
+    {
+      "label": "GENERATED_PLAN",
+      "group": "planning"
+    },
+    {
+      "label": "HAS_DAY",
+      "group": "planning"
+    },
+    {
+      "label": "CHOOSES_TRANSPORT",
+      "group": "planning"
+    },
+    {
+      "label": "CHOOSES_STAY",
+      "group": "planning"
+    },
+    {
+      "label": "CHOOSES_ACTIVITY",
+      "group": "planning"
+    },
+    {
+      "label": "HAS_BUDGET",
+      "group": "planning"
+    },
+    {
+      "label": "SATISFIES",
+      "group": "planning"
+    },
+    {
+      "label": "CONFLICTS_WITH",
+      "group": "planning"
+    },
+    {
+      "label": "ALTERNATIVE_TO",
+      "group": "planning"
+    },
+    {
+      "label": "SUPPORTED_BY",
+      "group": "evidence"
+    },
+    {
+      "label": "OBSERVED_FROM",
+      "group": "evidence"
+    },
+    {
+      "label": "VALID_DURING",
+      "group": "evidence"
+    },
+    {
+      "label": "SUPERSEDES",
+      "group": "evidence"
+    }
   ]
 }

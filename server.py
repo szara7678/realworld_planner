@@ -11,10 +11,25 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
+from planner_engine import (
+    build_context,
+    create_session_payload,
+    ensure_graph_defaults,
+    is_planner_query,
+    load_schema,
+    plan_next_step,
+    refresh_derived_values,
+    related_edges,
+    search_graph,
+    update_session_from_query,
+)
+
 BASE_DIR = Path(__file__).resolve().parent
 GRAPH_PATH = BASE_DIR / "graph-state.json"
 ENV_PATH = BASE_DIR / ".env"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+GRAPH_SCHEMA = load_schema(BASE_DIR)
+SESSION_STORE: dict[str, dict] = {}
 
 
 def load_env_file() -> None:
@@ -32,94 +47,40 @@ load_env_file()
 
 
 def load_graph() -> dict:
-    return json.loads(GRAPH_PATH.read_text(encoding="utf-8"))
+    graph = json.loads(GRAPH_PATH.read_text(encoding="utf-8"))
+    return ensure_graph_defaults(graph, GRAPH_SCHEMA)
 
 
-def save_graph(payload: dict) -> None:
-    payload.setdefault("meta", {})
-    payload["meta"]["updatedAt"] = datetime.now(timezone.utc).isoformat()
-    GRAPH_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+def save_graph(payload: dict) -> dict:
+    graph = ensure_graph_defaults(payload, GRAPH_SCHEMA)
+    graph.setdefault("meta", {})
+    graph["meta"]["updatedAt"] = datetime.now(timezone.utc).isoformat()
+    refresh_derived_values(graph)
+    GRAPH_PATH.write_text(json.dumps(graph, ensure_ascii=False, indent=2), encoding="utf-8")
+    return graph
 
 
-def search_graph(graph: dict, query: str) -> list[dict]:
-    terms = [term.strip().lower() for term in query.split() if term.strip()]
-    query_lower = query.lower()
-    if not terms:
-        return []
-
-    results: list[dict] = []
-    for node in graph.get("nodes", []):
-        haystack = " ".join(
-            [
-                node.get("id", ""),
-                node.get("type", ""),
-                node.get("title", ""),
-                node.get("notes", ""),
-                json.dumps(node.get("properties", {}), ensure_ascii=False),
-            ]
-        ).lower()
-        title = str(node.get("title", "")).lower()
-        score = sum(haystack.count(term) for term in terms)
-        if any(term in title for term in terms):
-            score += 3
-        if title and title in query_lower:
-            score += 6
-        if node.get("type") in {"Scenario", "Transport", "PriceEvidence"}:
-            score += 1
-        if score:
-            results.append(
-                {
-                    "kind": "node",
-                    "id": node.get("id"),
-                    "title": node.get("title"),
-                    "type": node.get("type"),
-                    "notes": node.get("notes", ""),
-                    "properties": node.get("properties", {}),
-                    "score": score,
-                }
-            )
-
-    results.sort(key=lambda item: item["score"], reverse=True)
-    return results[:8]
-
-
-def related_edges(graph: dict, matches: list[dict]) -> list[dict]:
-    node_ids = {item["id"] for item in matches}
-    edges: list[dict] = []
-    for edge in graph.get("edges", []):
-        if edge.get("from") in node_ids or edge.get("to") in node_ids:
-            edges.append(
-                {
-                    "kind": "edge",
-                    "id": edge.get("id"),
-                    "label": edge.get("label"),
-                    "from": edge.get("from"),
-                    "to": edge.get("to"),
-                }
-            )
-    return edges[:12]
-
-
-def build_context(graph: dict, matches: list[dict]) -> str:
-    parts = [
-        f"Graph title: {graph.get('meta', {}).get('title', '')}",
-        "Top graph matches:",
-    ]
-    for item in matches:
-        props = ", ".join(f"{k}={v}" for k, v in item.get("properties", {}).items())
-        parts.append(
-            f"- [{item['type']}] {item['title']} ({item['id']}): {item.get('notes', '')} | {props}"
-        )
-    return "\n".join(parts)
+def build_local_search_answer(query: str, matches: list[dict], matched_edges: list[dict]) -> str:
+    if not matches:
+        return "직접 매칭된 노드가 아직 적다. 도시명, 테마, 공항, 예산 같은 키워드를 더 구체적으로 넣어줘."
+    lines = [f"'{query}' 기준으로 연결이 강한 노드를 먼저 골랐다.", ""]
+    for item in matches[:5]:
+        props = item.get("latest_values") or item.get("properties") or {}
+        summary = ", ".join(f"{key}={value}" for key, value in list(props.items())[:3])
+        lines.append(f"- [{item['type']}] {item['title']} : {summary or item.get('notes', '')}")
+    if matched_edges:
+        lines.extend(["", "연결 정보:"])
+        for edge in matched_edges[:6]:
+            lines.append(f"- {edge['from']} -> {edge['label']} -> {edge['to']}")
+    return "\n".join(lines)
 
 
 def call_openrouter(query: str, graph: dict, matches: list[dict], model: str, api_key: str) -> str:
     context = build_context(graph, matches)
     system = (
-        "You are a travel graph search assistant. "
-        "Use the provided graph context first, avoid inventing unavailable routes, "
-        "and answer in concise Korean. "
-        "Explicitly mention which matched items were used."
+        "You are a travel graph retrieval assistant. "
+        "Use the provided graph context first, stay factual, and answer in concise Korean. "
+        "Mention uncertainty when schedule or price evidence is incomplete."
     )
     user = f"Question: {query}\n\nGraph context:\n{context}"
     payload = {
@@ -138,7 +99,7 @@ def call_openrouter(query: str, graph: dict, matches: list[dict], model: str, ap
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
             "HTTP-Referer": "http://localhost:8765",
-            "X-Title": "Vacation Graph Workspace",
+            "X-Title": "Realworld Planner",
         },
         method="POST",
     )
@@ -147,7 +108,7 @@ def call_openrouter(query: str, graph: dict, matches: list[dict], model: str, ap
         return ((body.get("choices") or [{}])[0].get("message") or {}).get("content", "")
 
 
-class VacationHandler(SimpleHTTPRequestHandler):
+class PlannerHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(BASE_DIR), **kwargs)
 
@@ -155,8 +116,11 @@ class VacationHandler(SimpleHTTPRequestHandler):
         if self.path == "/api/graph":
             self.respond_json(load_graph())
             return
+        if self.path == "/api/schema":
+            self.respond_json(GRAPH_SCHEMA)
+            return
         if self.path == "/api/health":
-            self.respond_json({"ok": True})
+            self.respond_json({"ok": True, "planner_sessions": len(SESSION_STORE)})
             return
         super().do_GET()
 
@@ -167,6 +131,12 @@ class VacationHandler(SimpleHTTPRequestHandler):
         if self.path == "/api/search":
             self.handle_search()
             return
+        if self.path == "/api/plan/session":
+            self.handle_plan_session()
+            return
+        if self.path == "/api/plan/step":
+            self.handle_plan_step()
+            return
         self.send_error(HTTPStatus.NOT_FOUND, "Not found")
 
     def handle_save_graph(self) -> None:
@@ -174,8 +144,8 @@ class VacationHandler(SimpleHTTPRequestHandler):
         if not isinstance(payload, dict) or "nodes" not in payload or "edges" not in payload:
             self.respond_json({"error": "Invalid graph payload"}, HTTPStatus.BAD_REQUEST)
             return
-        save_graph(payload)
-        self.respond_json({"ok": True, "updatedAt": payload.get("meta", {}).get("updatedAt", "")})
+        graph = save_graph(payload)
+        self.respond_json({"ok": True, "updatedAt": graph.get("meta", {}).get("updatedAt", "")})
 
     def handle_search(self) -> None:
         payload = self.read_json()
@@ -183,20 +153,24 @@ class VacationHandler(SimpleHTTPRequestHandler):
         model = (payload or {}).get("model", "").strip()
         api_key = ((payload or {}).get("apiKey") or os.environ.get("OPENROUTER_API_KEY", "")).strip()
         graph = load_graph()
-        matches = search_graph(graph, query)
+        matches = search_graph(graph, query, GRAPH_SCHEMA)
+        matched_edges = related_edges(graph, matches)
         response = {
             "matches": matches,
-            "matched_edges": related_edges(graph, matches),
+            "matched_edges": matched_edges,
             "answer": "",
             "used_openrouter": False,
             "model": model or "openai/gpt-4o-mini",
             "graph_context": build_context(graph, matches),
+            "schema_version": GRAPH_SCHEMA.get("version", "2.0"),
         }
         if not query:
             self.respond_json(response)
             return
+        response["answer"] = build_local_search_answer(query, matches, matched_edges)
+        if is_planner_query(query):
+            response["answer"] += "\n\n이 입력은 제약 기반 플래너로도 해석될 수 있다. 채팅 UI에서는 자동으로 플래너 단계 응답을 우선 사용한다."
         if not api_key:
-            response["answer"] = "OPENROUTER_API_KEY가 없어서 로컬 그래프 검색 결과만 보여준다."
             self.respond_json(response)
             return
         try:
@@ -210,6 +184,45 @@ class VacationHandler(SimpleHTTPRequestHandler):
         except Exception as error:
             response["answer"] = f"OpenRouter 호출 실패: {error}"
         self.respond_json(response)
+
+    def handle_plan_session(self) -> None:
+        payload = self.read_json()
+        graph = load_graph()
+        session_id = (payload or {}).get("session_id") or ""
+        query = (payload or {}).get("query", "").strip()
+        session = SESSION_STORE.get(session_id) or create_session_payload(session_id or None)
+        if query:
+            update_session_from_query(graph, GRAPH_SCHEMA, session, query)
+        constraints = (payload or {}).get("constraints") or {}
+        preferences = (payload or {}).get("preferences") or {}
+        session.setdefault("constraints", {}).update(constraints)
+        session.setdefault("preferences", {}).update(preferences)
+        SESSION_STORE[session["id"]] = session
+        self.respond_json({"ok": True, "session": session, "schema": GRAPH_SCHEMA})
+
+    def handle_plan_step(self) -> None:
+        payload = self.read_json()
+        graph = load_graph()
+        query = (payload or {}).get("query", "").strip()
+        session_id = (payload or {}).get("session_id") or ""
+        session = SESSION_STORE.get(session_id) or create_session_payload(session_id or None)
+        if query:
+            update_session_from_query(graph, GRAPH_SCHEMA, session, query)
+        result = plan_next_step(graph, GRAPH_SCHEMA, session)
+        SESSION_STORE[session["id"]] = session
+        self.respond_json(
+            {
+                "ok": True,
+                "answer": result["answer"],
+                "stage": result["stage"],
+                "session": result["session"],
+                "matches": result["matches"],
+                "matched_edges": result["matched_edges"],
+                "recommendations": result["recommendations"],
+                "alternatives": result["alternatives"],
+                "next_question": result["next_question"],
+            }
+        )
 
     def read_json(self) -> dict | None:
         length = int(self.headers.get("Content-Length", "0"))
@@ -263,8 +276,8 @@ def windows_host_ip() -> str:
 def main() -> None:
     host = os.environ.get("VACATION_HOST", "0.0.0.0")
     port = int(os.environ.get("VACATION_PORT", "8765"))
-    server = ThreadingHTTPServer((host, port), VacationHandler)
-    print(f"Vacation Graph Workspace: http://127.0.0.1:{port}/graph-editor.html")
+    server = ThreadingHTTPServer((host, port), PlannerHandler)
+    print(f"Realworld Planner: http://127.0.0.1:{port}/graph-editor.html")
     print(f"Same network URL: http://{local_ip()}:{port}/graph-editor.html")
     print("Press Ctrl+C to stop.")
     server.serve_forever()

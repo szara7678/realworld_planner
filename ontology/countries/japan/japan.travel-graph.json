@@ -1,14 +1,12 @@
 {
   "country": "Japan",
+  "schema_version": "2.0",
+  "canonical_store": "neo4j-ready-json-cache",
   "seed_file": "../../../graph-state.json",
   "focus": [
-    "culture",
-    "festival",
-    "region",
-    "city",
-    "district",
-    "restaurant",
-    "transit"
+    "knowledge",
+    "planning",
+    "evidence"
   ],
-  "notes": "Start country dataset for extensible travel Q&A graph"
+  "notes": "Japan starter dataset for a constraint-driven planner. General travel knowledge remains the base layer, while sample planner sessions preserve older route comparisons."
 }
