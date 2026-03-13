@@ -24,6 +24,7 @@
           </div>
           <div class="topbar-actions">
             <button id="settingsBtn" class="icon-fab" type="button" title="설정">⚙️</button>
+            <button id="clusterBtn" class="icon-fab" type="button" title="클러스터 보기">◎</button>
             <button id="addNodeBtn" class="icon-fab" type="button" title="노드 추가">➕</button>
             <button id="connectBtn" class="icon-fab" type="button" title="엣지 연결">🔗</button>
             <button id="saveBtn" class="icon-fab" type="button" title="서버 저장">💾</button>
@@ -34,6 +35,7 @@
         <div id="viewport" class="viewport">
           <div id="world" class="world">
             <svg id="edgeLayer" class="graph-svg"></svg>
+            <svg id="overlayLayer" class="graph-svg graph-svg-overlay"></svg>
             <div id="nodeLayer" class="node-layer"></div>
           </div>
         </div>
@@ -156,7 +158,18 @@
     </dialog>
 
     <script src="./graph-data.js"></script>
-    <script src="./planner-static.js"></script>
+    <script src="./frontend/shared/data-utils.js"></script>
+    <script src="./frontend/editor/planner-profile.js"></script>
+    <script src="./frontend/editor/cluster-view.js"></script>
+    <script src="./frontend/editor/viewport-controller.js"></script>
+    <script src="./frontend/editor/storage-controller.js"></script>
+    <script src="./frontend/editor/detail-panel.js"></script>
+    <script src="./frontend/editor/chat-controller.js"></script>
+    <script src="./frontend/editor/app-shell.js"></script>
+    <script src="./frontend/planner/constants.js"></script>
+    <script src="./frontend/planner/parsers.js"></script>
+    <script src="./frontend/planner/candidates.js"></script>
+    <script src="./frontend/planner/engine.js"></script>
     <script src="./graph-editor.js"></script>
   </body>
 </html>

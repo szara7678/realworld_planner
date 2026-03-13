@@ -267,7 +267,9 @@
       "tags": [
         "배편",
         "자연",
-        "저예산"
+        "저예산",
+        "쇼핑",
+        "면세"
       ],
       "properties": {
         "country_code": "JP",
@@ -277,7 +279,13 @@
         "best_season": "4~6월,9~10월",
         "typical_budget_krw": 310000
       },
-      "notes": "이전 비교 데이터의 대마도 시나리오를 샘플 세션으로 유지하기 위한 도시 노드."
+      "notes": "이전 비교 데이터의 대마도 시나리오를 샘플 세션으로 유지하기 위한 도시 노드.",
+      "aliases": [
+        "tsushima",
+        "tsushima island",
+        "대마도",
+        "쓰시마"
+      ]
     },
     {
       "id": "district_shinjuku",
@@ -696,7 +704,11 @@
         "checkin_window": "15:00~22:00",
         "checkout_time": "10:00",
         "price_band_krw": "budget"
-      }
+      },
+      "aliases": [
+        "대마도 숙소",
+        "히타카츠 숙소"
+      ]
     },
     {
       "id": "event_gion",
@@ -921,7 +933,12 @@
         "city_ref": "city_tsushima",
         "route_scope": "international",
         "booking_hint": "이전 대마도 샘플 세션의 핵심 이동"
-      }
+      },
+      "aliases": [
+        "대마도 배편",
+        "부산-대마도 배편",
+        "쓰시마 배편"
+      ]
     },
     {
       "id": "transport_hit_pus",
@@ -936,7 +953,11 @@
         "city_ref": "city_tsushima",
         "route_scope": "international",
         "booking_hint": "사용자 입력 기반 샘플 귀국편"
-      }
+      },
+      "aliases": [
+        "대마도 귀국 배편",
+        "쓰시마 귀국 배편"
+      ]
     },
     {
       "id": "source_jnto",
@@ -3180,6 +3201,178 @@
       "notes": "나고야 중심의 일본 중부 권역.",
       "confidence": 0.82,
       "ext": {}
+    },
+    {
+      "id": "attraction_tsushima_dutyfree",
+      "type": "Attraction",
+      "title": "히타카츠 면세 쇼핑",
+      "x": 1680,
+      "y": 760,
+      "aliases": [
+        "대마도 쇼핑",
+        "대마도 면세점",
+        "히타카츠 면세점"
+      ],
+      "tags": [
+        "쇼핑",
+        "면세",
+        "단기여행"
+      ],
+      "status": "active",
+      "confidence": 0.82,
+      "ext": {},
+      "properties": {
+        "place_ref": "city_tsushima",
+        "category": "duty-free",
+        "best_time": "오전~오후",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 30000
+      },
+      "notes": "부산 출발 단기 대마도 여행에서 쇼핑 성격을 대표하는 활동 노드."
+    },
+    {
+      "id": "attraction_tsushima_port_market",
+      "type": "Attraction",
+      "title": "히타카츠 항구 상점가",
+      "x": 1680,
+      "y": 850,
+      "aliases": [
+        "대마도 상점가",
+        "히타카츠 상점가"
+      ],
+      "tags": [
+        "쇼핑",
+        "로컬"
+      ],
+      "status": "active",
+      "confidence": 0.78,
+      "ext": {},
+      "properties": {
+        "place_ref": "city_tsushima",
+        "category": "shopping-street",
+        "best_time": "오후",
+        "typical_duration_hours": 2,
+        "typical_budget_krw": 18000
+      },
+      "notes": "배편 도착 뒤 도보 동선으로 묶기 쉬운 로컬 쇼핑 구역."
+    },
+    {
+      "id": "restaurant_tsushima_homare",
+      "type": "Restaurant",
+      "title": "호마레 스시",
+      "x": 1760,
+      "y": 640,
+      "aliases": [
+        "대마도 횟집",
+        "쓰시마 횟집",
+        "사시미 맛집",
+        "해산물 맛집"
+      ],
+      "tags": [
+        "food",
+        "seafood",
+        "tsushima"
+      ],
+      "status": "active",
+      "confidence": 0.78,
+      "ext": {},
+      "properties": {
+        "place_ref": "city_tsushima",
+        "category": "seafood",
+        "signature_menu": "모둠 사시미 정식",
+        "meal_budget_krw": 28000,
+        "best_time": "저녁",
+        "near_hub_ref": "hub_hit"
+      },
+      "notes": "히타카츠 근처에서 회, 사시미, 해산물 덮밥으로 자주 묶이는 대마도 저녁 식사 후보."
+    },
+    {
+      "id": "restaurant_tsushima_isaribi",
+      "type": "Restaurant",
+      "title": "이사리비 해산물 식당",
+      "x": 1760,
+      "y": 720,
+      "aliases": [
+        "대마도 해산물",
+        "쓰시마 해산물",
+        "대마도 사시미",
+        "쓰시마 맛집"
+      ],
+      "tags": [
+        "food",
+        "seafood",
+        "tsushima"
+      ],
+      "status": "active",
+      "confidence": 0.77,
+      "ext": {},
+      "properties": {
+        "place_ref": "city_tsushima",
+        "category": "seafood",
+        "signature_menu": "해산물 덮밥과 사시미 세트",
+        "meal_budget_krw": 24000,
+        "best_time": "점심~저녁",
+        "near_hub_ref": "hub_hit"
+      },
+      "notes": "부산발 1박2일 대마도 여행에서 점심/저녁 둘 다 소화하기 쉬운 해산물 중심 식당 후보."
+    },
+    {
+      "id": "restaurant_tsushima_minato",
+      "type": "Restaurant",
+      "title": "미나토 식당",
+      "x": 1760,
+      "y": 800,
+      "aliases": [
+        "대마도 스시",
+        "항구 근처 횟집",
+        "쓰시마 스시"
+      ],
+      "tags": [
+        "food",
+        "seafood",
+        "tsushima"
+      ],
+      "status": "active",
+      "confidence": 0.76,
+      "ext": {},
+      "properties": {
+        "place_ref": "city_tsushima",
+        "category": "sushi",
+        "signature_menu": "현지 생선 스시와 구이 세트",
+        "meal_budget_krw": 22000,
+        "best_time": "저녁",
+        "near_hub_ref": "hub_hit"
+      },
+      "notes": "항구 접근성이 좋아 ferry 도착 후 바로 넣기 쉬운 스시/생선구이 식당 후보."
+    },
+    {
+      "id": "restaurant_tsushima_akashima",
+      "type": "Restaurant",
+      "title": "아카시마 회정식",
+      "x": 1760,
+      "y": 880,
+      "aliases": [
+        "대마도 회정식",
+        "쓰시마 회정식",
+        "횟집 추천"
+      ],
+      "tags": [
+        "food",
+        "seafood",
+        "tsushima"
+      ],
+      "status": "active",
+      "confidence": 0.75,
+      "ext": {},
+      "properties": {
+        "place_ref": "city_tsushima",
+        "category": "set-meal",
+        "signature_menu": "회정식과 전복죽",
+        "meal_budget_krw": 32000,
+        "best_time": "저녁",
+        "near_hub_ref": "hub_hit"
+      },
+      "notes": "해산물 비중을 높이고 싶을 때 추가하기 좋은 조금 더 진한 저녁 식사 선택지."
     }
   ],
   "edges": [
@@ -5132,6 +5325,90 @@
       "from": "region_chubu",
       "to": "prefecture_aichi",
       "label": "CONTAINS"
+    },
+    {
+      "id": "e2002",
+      "from": "city_tsushima",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e2003",
+      "from": "city_tsushima",
+      "to": "attraction_tsushima_dutyfree",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e2004",
+      "from": "city_tsushima",
+      "to": "attraction_tsushima_port_market",
+      "label": "HAS_ATTRACTION"
+    },
+    {
+      "id": "e2005",
+      "from": "attraction_tsushima_dutyfree",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e2006",
+      "from": "attraction_tsushima_port_market",
+      "to": "theme_shopping",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e3001",
+      "from": "city_tsushima",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e3002",
+      "from": "city_tsushima",
+      "to": "restaurant_tsushima_homare",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e3003",
+      "from": "restaurant_tsushima_homare",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e3004",
+      "from": "city_tsushima",
+      "to": "restaurant_tsushima_isaribi",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e3005",
+      "from": "restaurant_tsushima_isaribi",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e3006",
+      "from": "city_tsushima",
+      "to": "restaurant_tsushima_minato",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e3007",
+      "from": "restaurant_tsushima_minato",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
+    },
+    {
+      "id": "e3008",
+      "from": "city_tsushima",
+      "to": "restaurant_tsushima_akashima",
+      "label": "HAS_RESTAURANT"
+    },
+    {
+      "id": "e3009",
+      "from": "restaurant_tsushima_akashima",
+      "to": "theme_food",
+      "label": "MATCHES_THEME"
     }
   ]
 }
